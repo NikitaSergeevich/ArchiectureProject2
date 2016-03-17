@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 /RmiServer/build/
 /RmiServer/dist/
 /RmiServer/nbproject/private/
-=======
 /EEPs/InventoryMgr/nbproject/private/
 /EEPs/InventoryMgr/build/
 /EEPs/InventoryMgr/dist/
@@ -10,5 +8,3 @@
 /EEPs/ShippingApp/dist/
 /EEPs/ShippingApp/nbproject/private/
 /LeadTech/*
-
->>>>>>> 303fea0bfb53b86155b6ca01f1775440a29c4c55
