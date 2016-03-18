@@ -9,26 +9,37 @@ package common;
  *
  * @author isakhankov
  */
-public  class Constansts {
+public class Constansts {
+
     private Constansts() {
         //To prevent creation instance of the class
     }
-    
+
     public static String RMI_NAME = "project2";
     
     /***
+     * APPLICATION NAMES
+     */
+    public static String INVENTORY_MANAGER = "inventorymanager";
+    public static String ORDER_MANAGER = "ordermanager";
+    public static String SHIPPING_MANAGER = "shippingmanager";
+    
+    /**
+     * *
      * DATABASE CREDENTIALS
      */
     public static String DATABASE_LOGIN = "remote";
     public static String DATABASE_PASSWORD = "remote_pass";
-    
-    /***
+
+    /**
+     * *
      * DATABASE NAMES
      */
     public static String USER_ACTIVITY_URL = "jdbc:mysql://localhost:3306/useractivities";
     public static String LEAF_TECH_URL = "jdbc:mysql://localhost:3306/leaftech";
 
-    /***
+    /**
+     * *
      * COLUMN NAMES
      */
     public static String USER_LOGIN = "login";

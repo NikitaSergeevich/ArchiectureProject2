@@ -23,22 +23,21 @@ class RmiApi implements IRmiApi {
 
     public RmiApi() {
     }
+    
+    private final UserActivityLogger logger = new UserActivityLogger();
 
     @Override
-    public int executeTask() throws RemoteException {
-        return 42;
-    }
-
-    @Override
-    public String login(String login, String password) throws RemoteException {
+    public String login(String login, String password, String applicationName) throws RemoteException {
         try {
             Connection dbConnection = DriverManager.getConnection(Constansts.USER_ACTIVITY_URL, Constansts.DATABASE_LOGIN, Constansts.DATABASE_PASSWORD);
             java.sql.Statement sqlStatement = dbConnection.createStatement();
-            String query = "SELECT password FROM user WHERE login = '" + login + "'";
+            String query = "SELECT password FROM user WHERE login = '" + login
+                    + "' and applicationname = '" + applicationName + "'";
             ResultSet result = sqlStatement.executeQuery(query);
             if (result.next()) {
                 String expectedPassword = result.getString(Constansts.USER_PASSWORD);
                 if (password.equals(expectedPassword)) {
+                    logger.logLogin(login, applicationName);
                     return generateToken();
                 }
             }
