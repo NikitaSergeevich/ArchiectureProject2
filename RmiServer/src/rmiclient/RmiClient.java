@@ -5,10 +5,10 @@
  */
 package rmiclient;
 
-import java.math.BigDecimal;
+import common.Constansts;
+import common.IRmiApi;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import common.Compute;
 
 /**
  *
@@ -24,12 +24,14 @@ public class RmiClient {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            String name = "Compute";
             Registry registry = LocateRegistry.getRegistry(1099);
-            Compute comp = (Compute) registry.lookup(name);
-            Pi task = new Pi(Integer.parseInt("23"));
-            BigDecimal pi = comp.executeTask(task);
-            System.out.println(pi);
+            IRmiApi comp = (IRmiApi) registry.lookup(Constansts.RMI_NAME);
+            
+            String goodUser = comp.login("test", "test");
+            System.out.println(goodUser);
+            String badUser = comp.login("root", "test");
+            System.out.println(badUser);
+            
         } catch (Exception e) {
             System.err.println("ComputePi exception:");
             e.printStackTrace();

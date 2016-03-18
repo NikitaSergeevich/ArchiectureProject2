@@ -12,6 +12,9 @@ import java.rmi.RemoteException;
  *
  * @author isakhankov
  */
-public interface Compute extends Remote {
-    <T> T executeTask(Task<T> t) throws RemoteException;
+public interface IRmiApi extends Remote {
+    int executeTask() throws RemoteException;
+    
+    //used to authentificate user
+    String login(String login, String password) throws RemoteException;
 }
