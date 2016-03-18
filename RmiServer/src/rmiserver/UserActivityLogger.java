@@ -42,4 +42,16 @@ public class UserActivityLogger {
             Logger.getLogger(UserActivityLogger.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void logLogout(String user, String applicationName) {
+        try {
+            String query = "INSERT INTO useractivity (applicationname, "
+                    + "message, date) VALUES ( '"
+                    + applicationName + "', " + "' User: \"" + user + "\" has logged out', '"
+                    + new Date() + "');";
+            sqlStatement.execute(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserActivityLogger.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
