@@ -140,7 +140,6 @@ public class LoginForm extends javax.swing.JFrame {
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
         }
-        System.out.println("wrong login");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
