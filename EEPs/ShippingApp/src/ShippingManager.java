@@ -2,12 +2,12 @@
 import java.sql.*;
 
  /******************************************************************************
- * File:NewJFrame.java
- * Course: 17655
- * Project: Assignment 2
- * Copyright: Copyright (c) 2009 Carnegie Mellon University
- * Versions:
- *	1.0 November 2009 - Initial rewrite of original assignment 2 (ajl).
+ * File:ShippingManager.java
+ Course: 17655
+ Project: Assignment 2
+ Copyright: Copyright (c) 2009 Carnegie Mellon University
+ Versions:
+	1.0 November 2009 - Initial rewrite of original assignment 2 (ajl).
  *
  * This class defines a GUI application that allows EEP shipping personnel to
  * mark orders as shipped.
@@ -18,12 +18,12 @@ import java.sql.*;
  *
  * @author lattanze
  */
-public class NewJFrame extends javax.swing.JFrame {
+public class ShippingManager extends javax.swing.JFrame {
     Integer updateOrderID;
     String versionID = "v2.10.10";
     
     /** Creates new form NewJFrame */
-    public NewJFrame() {
+    public ShippingManager() {
         initComponents();
         jLabel1.setText("Shipping Application " + versionID);
     }
@@ -781,7 +781,7 @@ public class NewJFrame extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewJFrame().setVisible(true);
+                new ShippingManager().setVisible(true);
             }
         });
     }
