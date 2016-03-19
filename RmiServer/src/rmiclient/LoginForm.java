@@ -7,7 +7,6 @@ package rmiclient;
 
 import common.Constansts;
 import common.IRmiApi;
-import java.awt.event.WindowEvent;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
