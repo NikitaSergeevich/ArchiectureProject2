@@ -153,12 +153,11 @@ class RmiApi implements IRmiApi {
         }
         return -1;
     }
-
-    @Override
-    public List<Product> getTrees() throws RemoteException {
+    
+    private List<Product> parseProductResultSet(ResultSet res)
+    {
+        List<Product> products = new ArrayList<>();
         try {
-            ResultSet res = inventoryStatement.executeQuery("Select * from trees");
-            List<Product> products = new ArrayList<>();
             while (res.next()) {
                 Product product = new Product();
                 product.setProductCode(res.getString(1));
@@ -166,32 +165,34 @@ class RmiApi implements IRmiApi {
                 product.setQuantity(res.getInt(3));
                 product.setPrice(res.getFloat(4));
                 products.add(product);
-
             }
             return products;
         } catch (SQLException ex) {
             Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
-        return null;
     }
 
     @Override
     public List<Product> getShrubs() throws RemoteException {
         try {
             ResultSet res = inventoryStatement.executeQuery("Select * from shrubs");
-            List<Product> products = new ArrayList<>();
-            while (res.next()) {
-                Product product = new Product();
-                product.setProductCode(res.getString(1));
-                product.setDescription(res.getString(2));
-                product.setQuantity(res.getInt(3));
-                product.setPrice(res.getFloat(4));
-                products.add(product);
-
-            }
-            return products;
+            if (res != null)
+                return parseProductResultSet(res);
         } catch (SQLException ex) {
-            Logger.getLogger(OrderApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    @Override
+    public List<Product> getTrees() throws RemoteException {
+        try {
+            ResultSet res = inventoryStatement.executeQuery("Select * from trees");
+            if (res != null)
+                return parseProductResultSet(res);
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
         }
         return null;
     }
@@ -200,21 +201,172 @@ class RmiApi implements IRmiApi {
     public List<Product> getSeeds() throws RemoteException {
         try {
             ResultSet res = inventoryStatement.executeQuery("Select * from seeds");
-            List<Product> products = new ArrayList<>();
-            while (res.next()) {
-                Product product = new Product();
-                product.setProductCode(res.getString(1));
-                product.setDescription(res.getString(2));
-                product.setQuantity(res.getInt(3));
-                product.setPrice(res.getFloat(4));
-                products.add(product);
-
-            }
-            return products;
+            if (res != null)
+                return parseProductResultSet(res);
         } catch (SQLException ex) {
-            Logger.getLogger(OrderApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    @Override
+    public List<Product> getCultureBoxes() throws RemoteException {
+        try {
+            ResultSet res = inventoryStatement.executeQuery("Select * from cultureboxes");
+            if (res != null)
+                return parseProductResultSet(res);
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    @Override
+    public List<Product> getGenomics() throws RemoteException {
+        try {
+            ResultSet res = inventoryStatement.executeQuery("Select * from genomics");
+            if (res != null)
+                return parseProductResultSet(res);
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    @Override
+    public List<Product> getProcessing() throws RemoteException {
+        try {
+            ResultSet res = inventoryStatement.executeQuery("Select * from processing");
+            if (res != null)
+                return parseProductResultSet(res);
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    @Override
+    public List<Product> getReferenceMaterials() throws RemoteException {
+        try {
+            ResultSet res = inventoryStatement.executeQuery("Select * from referencematerials");
+            if (res != null)
+                return parseProductResultSet(res);
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    @Override
+    public int insertShrubs(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException {
+        try {
+            int res = inventoryStatement.executeUpdate("INSERT INTO shrubs (productid, "
+                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + productID + "', " + "'" + description + "', "
+                    + quantity + ", " + perUnitCost + ");");
+            if (res != -1)
+                return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return -1;
+    }
+    
+    @Override
+    public int insertTrees(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException {
+        try {
+            int res = inventoryStatement.executeUpdate("INSERT INTO trees (productid, "
+                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + productID + "', " + "'" + description + "', "
+                    + quantity + ", " + perUnitCost + ");");
+            if (res != -1)
+                return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return -1;
+    }
+    
+    @Override
+    public int insertSeeds(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException {
+        try {
+            int res = inventoryStatement.executeUpdate("INSERT INTO seeds (productid, "
+                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + productID + "', " + "'" + description + "', "
+                    + quantity + ", " + perUnitCost + ");");
+            if (res != -1)
+                return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return -1;
+    }
+    
+    @Override
+    public int insertCultureBoxes(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException {
+        try {
+            int res = inventoryStatement.executeUpdate("INSERT INTO cultureboxes (productid, "
+                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + productID + "', " + "'" + description + "', "
+                    + quantity + ", " + perUnitCost + ");");
+            if (res != -1)
+                return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return -1;
+    }
+    
+    @Override
+    public int insertGenomics(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException {
+        try {
+            int res = inventoryStatement.executeUpdate("INSERT INTO genomics (productid, "
+                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + productID + "', " + "'" + description + "', "
+                    + quantity + ", " + perUnitCost + ");");
+            if (res != -1)
+                return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return -1;
+    }
+    
+    @Override
+    public int insertProcessing(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException {
+        try {
+            int res = inventoryStatement.executeUpdate("INSERT INTO processing (productid, "
+                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + productID + "', " + "'" + description + "', "
+                    + quantity + ", " + perUnitCost + ");");
+            if (res != -1)
+                return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return -1;
+    }
+    
+    @Override
+    public int insertReferenceMaterials(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException {
+        try {
+            int res = inventoryStatement.executeUpdate("INSERT INTO referencematerials (productid, "
+                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + productID + "', " + "'" + description + "', "
+                    + quantity + ", " + perUnitCost + ");");
+            if (res != -1)
+                return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return -1;
     }
 
     @Override

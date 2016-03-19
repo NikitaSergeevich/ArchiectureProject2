@@ -5,7 +5,6 @@
  */
 package rmiclient.shippingmanager;
 
-import rmiclient.ordermanager.*;
 import common.Constansts;
 import common.IRmiApi;
 import rmiclient.LoginForm;
