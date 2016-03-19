@@ -1,6 +1,7 @@
+package rmiclient.inventorymanager;
 
+import common.IRmiApi;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 
 /**
@@ -27,7 +28,7 @@ import java.sql.ResultSet;
  */
 public class InventoryManager extends javax.swing.JFrame {
 
-    String versionID = "V1.1";
+    String versionID = "V1.2";
     DbCalls dbc = null;
     String rbutton_error_msg = "\nMust select a category radio button.";
     String description_error_msg = "Must enter a product description.";
@@ -38,11 +39,20 @@ public class InventoryManager extends javax.swing.JFrame {
     String msgString1 = "\n>> Establishing Driver...";
     String msgString2 = "\n>> Setting up URL...";
     String msgString3 = "\n>> Establishing connection with: "; //+ sourceURL
+    private final IRmiApi api;
+    private final String token;
 
     /**
      * Creates new form AddInventoryMainFrame
+     *
+     * @param comp
+     * @param token
      */
-    public InventoryManager() {
+    public InventoryManager(IRmiApi comp, String token) {
+
+        this.api = comp;
+        this.token = token;
+
         initComponents();
         jLabel1.setText("LeafTech Inventory Management Application " + versionID);
         dbc = new DbCalls();
@@ -448,7 +458,7 @@ public class InventoryManager extends javax.swing.JFrame {
             jTextArea1.append(msgString3);
 
             //create a connection to the db
-            dbc.connecttotheserver(sourceURL, "remote", "remote_pass");
+            dbc.connectToServer(sourceURL, "remote", "remote_pass");
         } catch (Exception e) {
             errString = "\nProblem connecting to database:: " + e;
             jTextArea1.append(errString);
@@ -557,7 +567,7 @@ public class InventoryManager extends javax.swing.JFrame {
             jTextArea1.append(msgString3);
 
             //create a connection to the db
-            dbc.connecttotheserver(sourceURL, "remote", "remote_pass");
+            dbc.connectToServer(sourceURL, "remote", "remote_pass");
         } catch (Exception e) {
             errString = "\nProblem connecting to database:: " + e;
             jTextArea1.append(errString);
@@ -573,41 +583,41 @@ public class InventoryManager extends javax.swing.JFrame {
                 // ... here is the SQL for culture boxes
                 case 1:
                     tableSelected = "CULTURE BOXES";
-                    res = dbc.select("cultureboxes");
+                    res = dbc.selectAll("cultureboxes");
                     break;
                 // ... here is the SQL for processing
                 case 2:
                     tableSelected = "PROCESSING";
-                    res = dbc.select("processing");
+                    res = dbc.selectAll("processing");
                     break;
                 // ... here is the SQL for genomics
                 case 3:
                     tableSelected = "GENOMICS";
-                    res = dbc.select("genomics");
+                    res = dbc.selectAll("genomics");
                     break;
                 // if reference materials are selected then insert inventory into referencematerials
                 // table
                 case 4:
                     tableSelected = "REFERENCE MATERIALS";
-                    res = dbc.select("referencematerials");
+                    res = dbc.selectAll("referencematerials");
                     break;
                 // if seeds are selected then insert inventory into referencematerials
                 // table
                 case 5:
                     tableSelected = "SEEDS";
-                    res = dbc.select("seeds");
+                    res = dbc.selectAll("seeds");
                     break;
                 // if shrubs are selected then insert inventory into referencematerials
                 // table
                 case 6:
                     tableSelected = "SHRUBS";
-                    res = dbc.select("shrubs");
+                    res = dbc.selectAll("shrubs");
                     break;
                 // if trees are selected then insert inventory into referencematerials
                 // table
                 case 7:
                     tableSelected = "TREES";
-                    res = dbc.select("trees");
+                    res = dbc.selectAll("trees");
                     break;
                 default:
                     break;
@@ -660,7 +670,7 @@ public class InventoryManager extends javax.swing.JFrame {
             jTextArea1.append(msgString3);
 
             //create a connection to the databases
-            dbc.connecttotheserver(sourceURL, "remote", "remote_pass");
+            dbc.connectToServer(sourceURL, "remote", "remote_pass");
         } catch (Exception e) {
             errString = "\nProblem connecting to database:: " + e;
             jTextArea1.append(errString);
@@ -743,7 +753,7 @@ public class InventoryManager extends javax.swing.JFrame {
             jTextArea1.append(msgString3);
 
             //create a connection to the databases
-            dbc.connecttotheserver(sourceURL, "remote", "remote_pass");
+            dbc.connectToServer(sourceURL, "remote", "remote_pass");
         } catch (Exception e) {
             errString = "\nProblem connecting to database:: " + e;
             jTextArea1.append(errString);
@@ -756,31 +766,31 @@ public class InventoryManager extends javax.swing.JFrame {
             switch (but_sel) {
                 // if culture boxes inventory selected
                 case 1:
-                    dbc.decrement_count("cultureboxes", "productid", productID);
+                    dbc.decrementCount("cultureboxes", "productid", productID);
                     break;
                 // if processing equipment inventory selected
                 case 2:
-                    dbc.decrement_count("processing", "productid", productID);
+                    dbc.decrementCount("processing", "productid", productID);
                     break;
                 // if genomics inventory selected
                 case 3:
-                    dbc.decrement_count("genomics", "productid", productID);
+                    dbc.decrementCount("genomics", "productid", productID);
                     break;
                 // if reference materials  inventory selected
                 case 4:
-                    dbc.decrement_count("referencematerials", "productid", productID);
+                    dbc.decrementCount("referencematerials", "productid", productID);
                     break;
                 // if seeds inventory selected
                 case 5:
-                    dbc.decrement_count("seeds", "product_code", productID);
+                    dbc.decrementCount("seeds", "product_code", productID);
                     break;
                 // if shrubs inventory selected
                 case 6:
-                    dbc.decrement_count("shrubs", "product_code", productID);
+                    dbc.decrementCount("shrubs", "product_code", productID);
                     break;
                 // if trees inventory selected
                 case 7:
-                    dbc.decrement_count("trees", "product_code", productID);
+                    dbc.decrementCount("trees", "product_code", productID);
                     break;
                 default:
                     break;
@@ -939,17 +949,6 @@ public class InventoryManager extends javax.swing.JFrame {
             return inventorySelection.substring(beginIndex, endIndex);
         }
         return null;
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new InventoryManager().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

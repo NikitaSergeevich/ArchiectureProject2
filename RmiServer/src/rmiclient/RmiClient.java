@@ -33,7 +33,6 @@ public class RmiClient {
             System.out.println(badUser);
             
         } catch (Exception e) {
-            System.err.println("ComputePi exception:");
             e.printStackTrace();
         }
     }

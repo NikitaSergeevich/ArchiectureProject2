@@ -1,3 +1,5 @@
+package rmiclient.inventorymanager;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,7 +19,7 @@ public class DbCalls {
     Connection DBConn = null;
     ResultSet res = null;
 
-    Boolean connecttotheserver(String sourceURL, String login, String password) {
+    public boolean connectToServer(String sourceURL, String login, String password) {
         try {
             //load JDBC driver class for MySQL
             Class.forName("com.mysql.jdbc.Driver");
@@ -29,14 +31,14 @@ public class DbCalls {
         return true;
     }
 
-    int insert(String tablename, String productID,
-            Integer quantity, String description, Float perUnitCost) {
+    public int insert(String tableName, String productID,
+            int quantity, String description, float perUnitCost) {
         int executeUpdateVal = 0;
         try {
             // create an SQL statement variable and create the INSERT
             // query to insert the new inventory into the database
             java.sql.Statement s = DBConn.createStatement();
-            String SQLstatement = ("INSERT INTO " + tablename + " (productid, "
+            String SQLstatement = ("INSERT INTO " + tableName + " (productid, "
                     + "productdescription, productquantity, productprice) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
@@ -49,7 +51,7 @@ public class DbCalls {
         return executeUpdateVal;
     }
 
-    ResultSet select(String tablename) {
+    ResultSet selectAll(String tablename) {
         int executeUpdateVal = 0;
         String query = "Select * from " + tablename;
         try {
@@ -82,9 +84,9 @@ public class DbCalls {
         return executeUpdateVal;
     }
 
-    ResultSet decrement_count(String tablename, String filedname, String productID) {
+    public ResultSet decrementCount(String tablename, String filedname, String productID) {
         int executeUpdateVal = 0;
-        String SQLstatement1 = ("UPDATE " + tablename
+        String sqlStatement = ("UPDATE " + tablename
                 + " set quantity=(quantity-1) where " + filedname + " = '"
                 + productID + "';");
         String SQLstatement2 = ("SELECT * from " + tablename
@@ -94,7 +96,7 @@ public class DbCalls {
             // execute the update, then query the BD for the table entry for the item just changed
             java.sql.Statement s = DBConn.createStatement();
             // execute the delete query
-            executeUpdateVal = s.executeUpdate(SQLstatement1);
+            executeUpdateVal = s.executeUpdate(sqlStatement);
             res = s.executeQuery(SQLstatement2);
         } catch (Exception ex) {
             return null;
