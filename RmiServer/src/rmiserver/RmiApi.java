@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rmiclient.ordermanager.OrderApi;
 
 /**
  *
@@ -171,7 +170,7 @@ class RmiApi implements IRmiApi {
             }
             return products;
         } catch (SQLException ex) {
-            Logger.getLogger(OrderApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
