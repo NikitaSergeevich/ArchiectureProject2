@@ -1,5 +1,6 @@
 package rmiclient.inventorymanager;
 
+import common.IRmiApi;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
@@ -38,11 +39,20 @@ public class InventoryManager extends javax.swing.JFrame {
     String msgString1 = "\n>> Establishing Driver...";
     String msgString2 = "\n>> Setting up URL...";
     String msgString3 = "\n>> Establishing connection with: "; //+ sourceURL
+    private final IRmiApi api;
+    private final String token;
 
     /**
      * Creates new form AddInventoryMainFrame
+     *
+     * @param comp
+     * @param token
      */
-    public InventoryManager() {
+    public InventoryManager(IRmiApi comp, String token) {
+
+        this.api = comp;
+        this.token = token;
+
         initComponents();
         jLabel1.setText("LeafTech Inventory Management Application " + versionID);
         dbc = new DbCalls();
@@ -939,17 +949,6 @@ public class InventoryManager extends javax.swing.JFrame {
             return inventorySelection.substring(beginIndex, endIndex);
         }
         return null;
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new InventoryManager().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
