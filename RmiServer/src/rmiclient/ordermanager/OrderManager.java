@@ -4,12 +4,14 @@ import common.Constansts;
 import common.IRmiApi;
 import common.pojo.Order;
 import common.pojo.Product;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
-import java.sql.*;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * ****************************************************************************
@@ -44,6 +46,20 @@ public class OrderManager extends javax.swing.JFrame {
 
         initComponents();
         jLabel1.setText("Order Management Application " + versionID);
+        
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    super.windowClosing(e);
+                    api.logout(token);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        });
     }
 
     /**

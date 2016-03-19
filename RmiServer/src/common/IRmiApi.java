@@ -21,6 +21,8 @@ public interface IRmiApi extends Remote {
     //used to authentificate user
     String login(String login, String password, String applicationName) throws RemoteException;
 
+    void logout(String token) throws RemoteException;
+
     Order getOrder(int id) throws RemoteException;
 
     List<Order> getOrders() throws RemoteException;
@@ -36,41 +38,40 @@ public interface IRmiApi extends Remote {
     public int dropOrderItemTable(String tableName) throws RemoteException;
 
     public int createOrderItem(String tableName, String productId, String description, float perUnitCost) throws RemoteException;
-    
+
     /*Inventory Methods*/
-    
     public List<Product> getShrubs() throws RemoteException;
-     
+
     public List<Product> getSeeds() throws RemoteException;
-     
+
     public List<Product> getTrees() throws RemoteException;
-             
+
     public List<Product> getCultureBoxes() throws RemoteException;
-             
+
     public List<Product> getGenomics() throws RemoteException;
-    
-    public List<Product> getProcessing() throws RemoteException;    
-             
+
+    public List<Product> getProcessing() throws RemoteException;
+
     public List<Product> getReferenceMaterials() throws RemoteException;
-             
-    public int insertShrubs(String productID, int quantity, String description, 
+
+    public int insertShrubs(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException;
-             
-    public int insertTrees(String productID, int quantity, String description, 
+
+    public int insertTrees(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException;
-             
-    public int insertSeeds(String productID, int quantity, String description, 
+
+    public int insertSeeds(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException;
-             
-    public int insertCultureBoxes(String productID, int quantity, 
+
+    public int insertCultureBoxes(String productID, int quantity,
             String description, float perUnitCost) throws RemoteException;
-             
-    public int insertGenomics(String productID, int quantity, 
+
+    public int insertGenomics(String productID, int quantity,
             String description, float perUnitCost) throws RemoteException;
-    
+
     public int insertProcessing(String productID, int quantity,
-            String description, float perUnitCost) throws RemoteException;    
-             
-    public int insertReferenceMaterials(String productID, int quantity, 
+            String description, float perUnitCost) throws RemoteException;
+
+    public int insertReferenceMaterials(String productID, int quantity,
             String description, float perUnitCost) throws RemoteException;
 }

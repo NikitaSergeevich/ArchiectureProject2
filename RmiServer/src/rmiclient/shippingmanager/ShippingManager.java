@@ -3,7 +3,13 @@ package rmiclient.shippingmanager;
 import common.IRmiApi;
 import common.pojo.Order;
 import common.pojo.OrderItem;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import rmiclient.ordermanager.OrderManager;
 
 /**
  * ****************************************************************************
@@ -39,6 +45,20 @@ public class ShippingManager extends javax.swing.JFrame {
         this.token = token;
         initComponents();
         jLabel1.setText("Shipping Application " + versionID);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    super.windowClosing(e);
+                    api.logout(token);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        });
+
     }
 
     /**

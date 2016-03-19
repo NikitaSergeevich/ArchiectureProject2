@@ -46,4 +46,5 @@ public class Constansts {
      */
     public static String USER_LOGIN = "login";
     public static String USER_PASSWORD = "password";
+    public static String USER_APPLICATION_NAME = "applicationname";
 }
