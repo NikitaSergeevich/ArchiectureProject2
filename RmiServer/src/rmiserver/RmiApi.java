@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import common.IRmiApi;
 import common.pojo.Order;
 import common.pojo.OrderItem;
+import common.pojo.Product;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rmiclient.ordermanager.OrderApi;
 
 /**
  *
@@ -28,6 +30,7 @@ class RmiApi implements IRmiApi {
 
     private Statement orderInfoStatement;
     private Statement userStatement;
+    private Statement inventoryStatement;
 
     public RmiApi() {
         try {
@@ -37,6 +40,10 @@ class RmiApi implements IRmiApi {
 
             Connection userConnection = DriverManager.getConnection(Constansts.USER_ACTIVITY_URL, Constansts.DATABASE_LOGIN, Constansts.DATABASE_PASSWORD);
             userStatement = userConnection.createStatement();
+
+            Connection inventoryConnection = DriverManager.getConnection(Constansts.INVENTORY_URL, "remote", "remote_pass");
+            inventoryStatement = inventoryConnection.createStatement();
+
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -146,6 +153,27 @@ class RmiApi implements IRmiApi {
             Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
+    }
+
+    @Override
+    public List<Product> getTrees() throws RemoteException {
+        try {
+            ResultSet res = inventoryStatement.executeQuery("Select * from trees");
+            List<Product> products = new ArrayList<>();
+            while (res.next()) {
+                Product product = new Product();
+                product.setProductCode(res.getString(1));
+                product.setDescription(res.getString(2));
+                product.setQuantity(res.getInt(3));
+                product.setPrice(res.getFloat(4));
+                products.add(product);
+
+            }
+            return products;
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }

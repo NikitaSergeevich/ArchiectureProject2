@@ -37,6 +37,7 @@ public class Constansts {
      */
     public static String USER_ACTIVITY_URL = "jdbc:mysql://localhost:3306/useractivities";
     public static String LEAF_TECH_URL = "jdbc:mysql://localhost:3306/leaftech";
+    public static String INVENTORY_URL = "jdbc:mysql://localhost:3306/inventory";
 
     /**
      * *

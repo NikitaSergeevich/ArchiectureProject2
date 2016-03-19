@@ -7,6 +7,7 @@ package common;
 
 import common.pojo.Order;
 import common.pojo.OrderItem;
+import common.pojo.Product;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -27,4 +28,6 @@ public interface IRmiApi extends Remote {
     List<OrderItem> getOrderItems(String orderTable) throws RemoteException;
 
     int updateShippedStatus(int id, boolean status) throws RemoteException;
+    
+    List<Product> getTrees() throws RemoteException;
 }

@@ -3,7 +3,6 @@ package rmiclient.shippingmanager;
 import common.IRmiApi;
 import common.pojo.Order;
 import common.pojo.OrderItem;
-import java.sql.*;
 import java.util.List;
 
 /**
