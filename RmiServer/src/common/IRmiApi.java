@@ -13,8 +13,7 @@ import java.rmi.RemoteException;
  * @author isakhankov
  */
 public interface IRmiApi extends Remote {
-    int executeTask() throws RemoteException;
     
     //used to authentificate user
-    String login(String login, String password) throws RemoteException;
+    String login(String login, String password, String applicationName) throws RemoteException;
 }
