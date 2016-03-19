@@ -29,8 +29,6 @@ public interface IRmiApi extends Remote {
 
     int updateShippedStatus(int id, boolean status) throws RemoteException;
 
-    List<Product> getTrees() throws RemoteException;
-
     public int createOrderItemTable(String tableName) throws RemoteException;
 
     public int createOrder(Order order) throws RemoteException;
@@ -39,7 +37,40 @@ public interface IRmiApi extends Remote {
 
     public int createOrderItem(String tableName, String productId, String description, float perUnitCost) throws RemoteException;
     
-     public List<Product> getShrubs() throws RemoteException;
+    /*Inventory Methods*/
+    
+    public List<Product> getShrubs() throws RemoteException;
      
-     public List<Product> getSeeds() throws RemoteException;
+    public List<Product> getSeeds() throws RemoteException;
+     
+    public List<Product> getTrees() throws RemoteException;
+             
+    public List<Product> getCultureBoxes() throws RemoteException;
+             
+    public List<Product> getGenomics() throws RemoteException;
+    
+    public List<Product> getProcessing() throws RemoteException;    
+             
+    public List<Product> getReferenceMaterials() throws RemoteException;
+             
+    public int insertShrubs(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException;
+             
+    public int insertTrees(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException;
+             
+    public int insertSeeds(String productID, int quantity, String description, 
+            float perUnitCost) throws RemoteException;
+             
+    public int insertCultureBoxes(String productID, int quantity, 
+            String description, float perUnitCost) throws RemoteException;
+             
+    public int insertGenomics(String productID, int quantity, 
+            String description, float perUnitCost) throws RemoteException;
+    
+    public int insertProcessing(String productID, int quantity,
+            String description, float perUnitCost) throws RemoteException;    
+             
+    public int insertReferenceMaterials(String productID, int quantity, 
+            String description, float perUnitCost) throws RemoteException;
 }
