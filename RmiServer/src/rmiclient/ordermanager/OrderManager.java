@@ -1,10 +1,15 @@
 package rmiclient.ordermanager;
 
+import common.Constansts;
 import common.IRmiApi;
+import common.pojo.Order;
 import common.pojo.Product;
+import java.rmi.RemoteException;
 import java.sql.*;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * ****************************************************************************
@@ -434,216 +439,119 @@ public class OrderManager extends javax.swing.JFrame {
         // database as well.
 
         int beginIndex;                 // String parsing index
-        Boolean connectError = false;   // Error flag
-        String customerAddress;         // Buyers mailing address
         int endIndex;                   // String paring index
-        String firstName = null;        // Customer's first name
-        Connection DBConn = null;       // MySQL connection handle
-        float fCost;                    // Total order cost
         String description;             // Tree, seed, or shrub description
-        Boolean executeError = false;   // Error flag
         String errString = null;        // String for displaying errors
-        int executeUpdateVal;           // Return value from execute indicating effected rows
-        String lastName = null;         // Customer's last name
         String msgString = null;        // String for displaying non-error messages
-        String orderTableName = null;   // This is the name of the table that lists the items
         String sTotalCost = null;       // String representing total order cost
         String sPerUnitCost = null;     // String representation of per unit cost
         String orderItem = null;        // Order line item from jTextArea2
-        String phoneNumber = null;      // Customer phone number
         Float perUnitCost;              // Cost per tree, seed, or shrub unit
         String productID = null;        // Product id of tree, seed, or shrub
-        Statement s = null;             // SQL statement pointer
-        String SQLstatement = null;     // String for building SQL queries
 
         // Check to make sure there is a first name, last name, address and phone
         if ((jTextField3.getText().length() > 0) && (jTextField4.getText().length() > 0)
                 && (jTextField5.getText().length() > 0)
                 && (jTextArea4.getText().length() > 0)) {
             try {
-                msgString = ">> Establishing Driver...";
-                jTextArea3.setText("\n" + msgString);
+                Calendar rightNow = Calendar.getInstance();
 
-                //load JDBC driver class for MySQL
-                Class.forName("com.mysql.jdbc.Driver");
+                int TheHour = rightNow.get(rightNow.HOUR_OF_DAY);
+                int TheMinute = rightNow.get(rightNow.MINUTE);
+                int TheSecond = rightNow.get(rightNow.SECOND);
+                int TheDay = rightNow.get(rightNow.DAY_OF_WEEK);
+                int TheMonth = rightNow.get(rightNow.MONTH);
+                int TheYear = rightNow.get(rightNow.YEAR);
 
-                msgString = ">> Setting up URL...";
-                jTextArea3.append("\n" + msgString);
+                String dateTimeStamp = TheMonth + "/" + TheDay + "/" + TheYear + " "
+                        + TheHour + ":" + TheMinute + ":" + TheSecond;
 
-                //define the data source
-                String SQLServerIP = jTextField1.getText();
-                String sourceURL = "jdbc:mysql://" + SQLServerIP + ":3306/orderinfo";
+                // Get the order data
+                sTotalCost = jTextField6.getText();
+                beginIndex = 0;
+                beginIndex = sTotalCost.indexOf("$", beginIndex) + 1;
+                sTotalCost = sTotalCost.substring(beginIndex, sTotalCost.length());
 
-                msgString = ">> Establishing connection with: " + sourceURL + "...";
-                jTextArea3.append("\n" + msgString);
+                Order order = new Order();
+                order.setDate(dateTimeStamp);
+                order.setFirstName(jTextField3.getText());
+                order.setLastName(jTextField4.getText());
+                order.setAddress(jTextArea4.getText());
+                order.setPhone(jTextField5.getText());
+                order.setCost(Float.parseFloat(sTotalCost));
+                order.setShippedStatus(0);
+                order.setOrderTableName("order" + String.valueOf(rightNow.getTimeInMillis()));
 
-                //create a connection to the db - note the default account is "remote"
-                //and the password is "remote_pass" - you will have to set this
-                //account up in your database
-                DBConn = DriverManager.getConnection(sourceURL, "remote", "remote_pass");
-
-            } catch (Exception e) {
-
-                errString = "\nError connecting to orderinfo database\n" + e;
-                jTextArea3.append(errString);
-                connectError = true;
-
-            } // end try-catch
-
-        } else {
-
-            errString = "\nMissing customer information!!!\n";
-            jTextArea3.append(errString);
-            connectError = true;
-
-        }// customer data check
-
-        //If there is not a connection error, then we form the SQL statement
-        //to submit the order to the orders table and then execute it.
-        if (!connectError) {
-            Calendar rightNow = Calendar.getInstance();
-
-            int TheHour = rightNow.get(rightNow.HOUR_OF_DAY);
-            int TheMinute = rightNow.get(rightNow.MINUTE);
-            int TheSecond = rightNow.get(rightNow.SECOND);
-            int TheDay = rightNow.get(rightNow.DAY_OF_WEEK);
-            int TheMonth = rightNow.get(rightNow.MONTH);
-            int TheYear = rightNow.get(rightNow.YEAR);
-            orderTableName = "order" + String.valueOf(rightNow.getTimeInMillis());
-
-            String dateTimeStamp = TheMonth + "/" + TheDay + "/" + TheYear + " "
-                    + TheHour + ":" + TheMinute + ":" + TheSecond;
-
-            // Get the order data
-            firstName = jTextField3.getText();
-            lastName = jTextField4.getText();
-            phoneNumber = jTextField5.getText();
-            customerAddress = jTextArea4.getText();
-            sTotalCost = jTextField6.getText();
-            beginIndex = 0;
-            beginIndex = sTotalCost.indexOf("$", beginIndex) + 1;
-            sTotalCost = sTotalCost.substring(beginIndex, sTotalCost.length());
-            fCost = Float.parseFloat(sTotalCost);
-
-            try {
-                s = DBConn.createStatement();
-
-                SQLstatement = ("CREATE TABLE " + orderTableName
-                        + "(item_id int unsigned not null auto_increment primary key, "
-                        + "product_id varchar(20), description varchar(80), "
-                        + "item_price float(7,2) );");
-
-                executeUpdateVal = s.executeUpdate(SQLstatement);
-
-            } catch (Exception e) {
-
-                errString = "\nProblem creating order table " + orderTableName + ":: " + e;
-                jTextArea3.append(errString);
-                executeError = true;
-
-            } // try
-
-            if (!executeError) {
-                try {
-                    SQLstatement = ("INSERT INTO orders (order_date, " + "first_name, "
-                            + "last_name, address, phone, total_cost, shipped, "
-                            + "ordertable) VALUES ( '" + dateTimeStamp + "', "
-                            + "'" + firstName + "', " + "'" + lastName + "', "
-                            + "'" + customerAddress + "', " + "'" + phoneNumber + "', "
-                            + fCost + ", " + false + ", '" + orderTableName + "' );");
-
-                    executeUpdateVal = s.executeUpdate(SQLstatement);
-
-                } catch (Exception e1) {
-
-                    errString = "\nProblem with inserting into table orders:: " + e1;
+                int result = api.createOrderItemTable(order.getOrderTableName());
+                if (result == Constansts.INVALID_RESULT) {
+                    errString = "\nProblem creating order table " + order.getOrderTableName();
                     jTextArea3.append(errString);
-                    executeError = true;
-
-                    try {
-                        SQLstatement = ("DROP TABLE " + orderTableName + ";");
-                        executeUpdateVal = s.executeUpdate(SQLstatement);
-
-                    } catch (Exception e2) {
-
-                        errString = "\nProblem deleting unused order table:: "
-                                + orderTableName + ":: " + e2;
+                } else {
+                    result = api.createOrder(order);
+                    if (result == Constansts.INVALID_RESULT) {
+                        errString = "\nProblem with inserting into table orders";
                         jTextArea3.append(errString);
 
-                    } // try
+                        result = api.dropOrderItemTable(order.getOrderTableName());
+                        if (result == Constansts.INVALID_RESULT) {
+                            errString = "\nProblem deleting unused order table:: "
+                                    + order.getOrderTableName();
+                            jTextArea3.append(errString);
+                        }
+                    } else {
+                        String[] items = jTextArea2.getText().split("\\n");
 
-                } // try
+                        for (int i = 0; i < items.length; i++) {
+                            orderItem = items[i];
+                            jTextArea3.append("\nitem #:" + i + ": " + items[i]);
 
-            } //execute error check
+                            // Check just to make sure that a blank line was not stuck in
+                            // there... just in case.
+                            if (orderItem.length() > 0) {
+                                // Parse out the product id
+                                beginIndex = 0;
+                                endIndex = orderItem.indexOf(" : ", beginIndex);
+                                productID = orderItem.substring(beginIndex, endIndex);
 
-        }
+                                // Parse out the description text
+                                beginIndex = endIndex + 3; //skip over " : "
+                                endIndex = orderItem.indexOf(" : ", beginIndex);
+                                description = orderItem.substring(beginIndex, endIndex);
 
-        // Now, if there is no connect or SQL execution errors at this point, 
-        // then we have an order added to the orderinfo::orders table, and a 
-        // new ordersXXXX table created. Here we insert the list of items in
-        // jTextArea2 into the ordersXXXX table.
-        if (!connectError && !executeError) {
-            // Now we create a table that contains the itemized list
-            // of stuff that is associated with the order
+                                // Parse out the item cost
+                                beginIndex = endIndex + 4; //skip over " : $"
+                                //endIndex = orderItem.indexOf(" : ",orderItem.length());
+                                //sPerUnitCost = orderItem.substring(beginIndex,endIndex);
+                                sPerUnitCost = orderItem.substring(beginIndex, orderItem.length());
+                                perUnitCost = Float.parseFloat(sPerUnitCost);
 
-            String[] items = jTextArea2.getText().split("\\n");
+                                result = api.createOrderItem(order.getOrderTableName(), productID, description, perUnitCost);
+                                if (result == Constansts.INVALID_RESULT) {
+                                    errString = "\nProblem with inserting into table " + order.getOrderNumber();
+                                    jTextArea3.append(errString);
+                                } else {
+                                    msgString = "\nORDER SUBMITTED FOR: " + order.getFirstName() + " " + order.getLastName();
+                                    jTextArea3.setText(msgString);
 
-            for (int i = 0; i < items.length; i++) {
-                orderItem = items[i];
-                jTextArea3.append("\nitem #:" + i + ": " + items[i]);
+                                    // Clean up the display
+                                    jTextArea1.setText("");
+                                    jTextArea2.setText("");
+                                    jTextArea4.setText("");
+                                    jTextField3.setText("");
+                                    jTextField4.setText("");
+                                    jTextField5.setText("");
+                                    jTextField6.setText("$0");
+                                }
+                            } // line length check
 
-                // Check just to make sure that a blank line was not stuck in
-                // there... just in case.
-                if (orderItem.length() > 0) {
-                    // Parse out the product id
-                    beginIndex = 0;
-                    endIndex = orderItem.indexOf(" : ", beginIndex);
-                    productID = orderItem.substring(beginIndex, endIndex);
-
-                    // Parse out the description text
-                    beginIndex = endIndex + 3; //skip over " : "
-                    endIndex = orderItem.indexOf(" : ", beginIndex);
-                    description = orderItem.substring(beginIndex, endIndex);
-
-                    // Parse out the item cost
-                    beginIndex = endIndex + 4; //skip over " : $"
-                    //endIndex = orderItem.indexOf(" : ",orderItem.length());
-                    //sPerUnitCost = orderItem.substring(beginIndex,endIndex);
-                    sPerUnitCost = orderItem.substring(beginIndex, orderItem.length());
-                    perUnitCost = Float.parseFloat(sPerUnitCost);
-
-                    SQLstatement = ("INSERT INTO " + orderTableName
-                            + " (product_id, description, item_price) "
-                            + "VALUES ( '" + productID + "', " + "'"
-                            + description + "', " + perUnitCost + " );");
-                    try {
-                        executeUpdateVal = s.executeUpdate(SQLstatement);
-                        msgString = "\nORDER SUBMITTED FOR: " + firstName + " " + lastName;
-                        jTextArea3.setText(msgString);
-
-                        // Clean up the display
-                        jTextArea1.setText("");
-                        jTextArea2.setText("");
-                        jTextArea4.setText("");
-                        jTextField3.setText("");
-                        jTextField4.setText("");
-                        jTextField5.setText("");
-                        jTextField6.setText("$0");
-
-                    } catch (Exception e) {
-
-                        errString = "\nProblem with inserting into table " + orderTableName
-                                + ":: " + e;
-                        jTextArea3.append(errString);
-
-                    } // try
-
-                } // line length check
-
-            } //for each line of text in order table
+                        } //for each line of text in order table
+                    }
+                }
+            } catch (RemoteException ex) {
+                Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
         }
-
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
@@ -656,69 +564,27 @@ public class OrderManager extends javax.swing.JFrame {
         // displayed in jTextArea1. From here the user can select an inventory
         // item by triple clicking the item.
 
-        Boolean connectError = false;       // Error flag
-        Connection DBConn = null;           // MySQL connection handle
         String errString = null;            // String for displaying errors
         String msgString = null;            // String for displaying non-error messages
-        ResultSet res = null;               // SQL query result set pointer
-        Statement s = null;                 // SQL statement pointer
 
-        // Connect to the inventory database
         try {
-            msgString = ">> Establishing Driver...";
-            jTextArea1.setText("\n" + msgString);
+            //Display the data in the textarea
+            jTextArea1.setText("");
 
-            //load JDBC driver class for MySQL
-            Class.forName("com.mysql.jdbc.Driver");
-
-            msgString = ">> Setting up URL...";
-            jTextArea1.append("\n" + msgString);
-
-            //define the data source
-            String SQLServerIP = jTextField1.getText();
-            String sourceURL = "jdbc:mysql://" + SQLServerIP + ":3306/inventory";
-
-            msgString = ">> Establishing connection with: " + sourceURL + "...";
-            jTextArea1.append("\n" + msgString);
-
-            //create a connection to the db - note the default account is "remote"
-            //and the password is "remote_pass" - you will have to set this
-            //account up in your database
-            DBConn = DriverManager.getConnection(sourceURL, "remote", "remote_pass");
+            List<Product> seeds = api.getSeeds();
+            for (Product seed : seeds) {
+                msgString = seed.getProductCode() + " : " + seed.getDescription()
+                        + " : $" + seed.getPrice() + " : " + seed.getQuantity()
+                        + " units in stock";
+                jTextArea1.append(msgString + "\n");
+            }
 
         } catch (Exception e) {
 
-            errString = "\nProblem connecting to database:: " + e;
+            errString = "\nProblem getting seed inventory:: " + e;
             jTextArea1.append(errString);
-            connectError = true;
 
         } // end try-catch
-
-        // If we are connected, then we get the list of seeds from the
-        // inventory database
-        if (!connectError) {
-            try {
-                s = DBConn.createStatement();
-                res = s.executeQuery("Select * from seeds");
-
-                //Display the data in the textarea
-                jTextArea1.setText("");
-
-                while (res.next()) {
-                    msgString = res.getString(1) + " : " + res.getString(2)
-                            + " : $" + res.getString(4) + " : " + res.getString(3)
-                            + " units in stock";
-                    jTextArea1.append(msgString + "\n");
-
-                } // while
-
-            } catch (Exception e) {
-
-                errString = "\nProblem getting seed inventory:: " + e;
-                jTextArea1.append(errString);
-
-            } // end try-catch
-        } // if connect check
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -727,69 +593,25 @@ public class OrderManager extends javax.swing.JFrame {
         // displayed in jTextArea1. From here the user can select an inventory
         // item by triple clicking the item.
 
-        Boolean connectError = false;       // Error flag
-        Connection DBConn = null;           // MySQL connection handle
         String errString = null;            // String for displaying errors
         String msgString = null;            // String for displaying non-error messages
-        ResultSet res = null;               // SQL query result set pointer
-        Statement s = null;                 // SQL statement pointer
 
-        // Connect to the inventory database
         try {
-            msgString = ">> Establishing Driver...";
-            jTextArea1.setText("\n" + msgString);
+            //Display the data in the textarea
+            jTextArea1.setText("");
 
-            //load JDBC driver class for MySQL
-            Class.forName("com.mysql.jdbc.Driver");
-
-            msgString = ">> Setting up URL...";
-            jTextArea1.append("\n" + msgString);
-
-            //define the data source
-            String SQLServerIP = jTextField1.getText();
-            String sourceURL = "jdbc:mysql://" + SQLServerIP + ":3306/inventory";
-
-            msgString = ">> Establishing connection with: " + sourceURL + "...";
-            jTextArea1.append("\n" + msgString);
-
-            //create a connection to the db - note the default account is "remote"
-            //and the password is "remote_pass" - you will have to set this
-            //account up in your database
-            DBConn = DriverManager.getConnection(sourceURL, "remote", "remote_pass");
-
+            List<Product> shrubs = api.getShrubs();
+            for (Product shrub : shrubs) {
+                msgString = shrub.getProductCode() + " : " + shrub.getDescription()
+                        + " : $" + shrub.getPrice() + " : " + shrub.getQuantity()
+                        + " units in stock";
+                jTextArea1.append(msgString + "\n");
+            }
         } catch (Exception e) {
-
-            errString = "\nProblem connecting to database:: " + e;
+            errString = "\nProblem getting shrubs inventory:: " + e;
             jTextArea1.append(errString);
-            connectError = true;
 
         } // end try-catch
-
-        // If we are connected, then we get the list of shrubs from the
-        // inventory database
-        if (!connectError) {
-            try {
-                s = DBConn.createStatement();
-                res = s.executeQuery("Select * from shrubs");
-
-                //Display the data in the textarea
-                jTextArea1.setText("");
-
-                while (res.next()) {
-                    msgString = res.getString(1) + " : " + res.getString(2)
-                            + " : $" + res.getString(4) + " : " + res.getString(3)
-                            + " units in stock";
-                    jTextArea1.append(msgString + "\n");
-
-                } // while
-
-            } catch (Exception e) {
-
-                errString = "\nProblem getting shrubs inventory:: " + e;
-                jTextArea1.append(errString);
-
-            } // end try-catch
-        } // if connect check
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed

@@ -16,6 +16,7 @@ public class Constansts {
     }
 
     public static String RMI_NAME = "project2";
+    public static int INVALID_RESULT = -1;
     
     /***
      * APPLICATION NAMES

@@ -28,6 +28,18 @@ public interface IRmiApi extends Remote {
     List<OrderItem> getOrderItems(String orderTable) throws RemoteException;
 
     int updateShippedStatus(int id, boolean status) throws RemoteException;
-    
+
     List<Product> getTrees() throws RemoteException;
+
+    public int createOrderItemTable(String tableName) throws RemoteException;
+
+    public int createOrder(Order order) throws RemoteException;
+
+    public int dropOrderItemTable(String tableName) throws RemoteException;
+
+    public int createOrderItem(String tableName, String productId, String description, float perUnitCost) throws RemoteException;
+    
+     public List<Product> getShrubs() throws RemoteException;
+     
+     public List<Product> getSeeds() throws RemoteException;
 }
