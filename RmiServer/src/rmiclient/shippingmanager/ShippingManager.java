@@ -336,7 +336,7 @@ public class ShippingManager extends javax.swing.JFrame {
         orderSelection = jTextArea1.getSelectedText();
 
         // make sure its not blank
-        if (orderSelection.length() > 0) {
+        if (orderSelection != null && orderSelection.length() > 0) {
             // get the product ID
             beginIndex = 0;
             beginIndex = orderSelection.indexOf(" # ", beginIndex);
