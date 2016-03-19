@@ -540,7 +540,7 @@ public class ShippingManager extends javax.swing.JFrame {
             // isn't very elegant.
             List<Order> orders = api.getOrders();
             for (Order order : orders) {
-                if (order.getShippedStatus() == 0) {
+                if (order.getShippedStatus() == 1) {
                     msgString = "ORDER # " + order.getOrderNumber() + " : " + order.getDate()
                             + " : " + order.getFirstName() + " : " + order.getLastName();
                     jTextArea1.append(msgString + "\n");

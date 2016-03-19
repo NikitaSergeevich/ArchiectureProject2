@@ -1,5 +1,7 @@
 package common.pojo;
 
+import java.io.Serializable;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,7 +11,7 @@ package common.pojo;
  *
  * @author isakhankov
  */
-public class OrderItem {
+public class OrderItem implements Serializable{
 
     private String id;
     private String productId;
