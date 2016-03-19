@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class Order implements Serializable {
 
+    private String orderNumber;
     private String tableName;
     private String firstName;
     private String lastName;
@@ -20,6 +21,7 @@ public class Order implements Serializable {
     private String phone;
     private String date;
     private String address;
+    private int shippedStatus;
 
     /**
      * @return the tableName
@@ -117,6 +119,34 @@ public class Order implements Serializable {
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    /**
+     * @return the shippedStatus
+     */
+    public int getShippedStatus() {
+        return shippedStatus;
+    }
+
+    /**
+     * @param shippedStatus the shippedStatus to set
+     */
+    public void setShippedStatus(int shippedStatus) {
+        this.shippedStatus = shippedStatus;
+    }
+
+    /**
+     * @return the orderNumber
+     */
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    /**
+     * @param orderNumber the orderNumber to set
+     */
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
 }
