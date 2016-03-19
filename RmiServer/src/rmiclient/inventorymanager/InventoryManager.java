@@ -1,10 +1,14 @@
 package rmiclient.inventorymanager;
 
 import common.IRmiApi;
-import common.pojo.Product;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import rmiclient.ordermanager.OrderManager;
 
 /**
  * ****************************************************************************
@@ -64,6 +68,19 @@ public class InventoryManager extends javax.swing.JFrame {
         jRadioButton5.setSelected(false);
         jRadioButton6.setSelected(false);
         jRadioButton7.setSelected(false);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    super.windowClosing(e);
+                    api.logout(token);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        });
     }
 
     /**

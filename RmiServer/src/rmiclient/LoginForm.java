@@ -11,6 +11,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -135,6 +136,10 @@ public class LoginForm extends javax.swing.JFrame {
             if (token != null) {
                 openApplication(api, token);
                 this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Login and password are incorrect!",
+                        "Authentification error", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (RemoteException | NotBoundException e) {
