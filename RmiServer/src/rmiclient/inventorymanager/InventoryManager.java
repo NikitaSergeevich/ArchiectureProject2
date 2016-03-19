@@ -1,8 +1,10 @@
 package rmiclient.inventorymanager;
 
 import common.IRmiApi;
+import common.pojo.Product;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * ****************************************************************************
@@ -29,7 +31,6 @@ import java.sql.ResultSet;
 public class InventoryManager extends javax.swing.JFrame {
 
     String versionID = "V1.2";
-    DbCalls dbc = null;
     String rbutton_error_msg = "\nMust select a category radio button.";
     String description_error_msg = "Must enter a product description.";
     String productid_error_msg = "Must enter a product ID.";
@@ -55,7 +56,6 @@ public class InventoryManager extends javax.swing.JFrame {
 
         initComponents();
         jLabel1.setText("LeafTech Inventory Management Application " + versionID);
-        dbc = new DbCalls();
 
         jRadioButton1.setSelected(false);
         jRadioButton2.setSelected(false);
@@ -82,7 +82,6 @@ public class InventoryManager extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
@@ -140,13 +139,6 @@ public class InventoryManager extends javax.swing.JFrame {
 
         jLabel4.setText("Quantity");
 
-        jTextField1.setText("localhost");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
         jButton1.setText("Add");
         jButton1.setActionCommand("jButton1");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -160,8 +152,6 @@ public class InventoryManager extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jLabel5.setText("Product Description");
-
-        jLabel6.setText("Database Server IP");
 
         jButton2.setText("List Table Contents");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -274,10 +264,7 @@ public class InventoryManager extends javax.swing.JFrame {
                                         .addComponent(jLabel4)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel6))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -342,9 +329,7 @@ public class InventoryManager extends javax.swing.JFrame {
                         .addComponent(jLabel7)
                         .addGap(3, 3, 3))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14)
@@ -447,26 +432,7 @@ public class InventoryManager extends javax.swing.JFrame {
         if (but_sel == 0 || checkfields()) {
             return;
         }
-
-        //Now, if there was no error in the data fields, we try to
-        //connect to the database.
-        try {
-            jTextArea1.setText(msgString1);
-            jTextArea1.append(msgString2);
-
-            String sourceURL = GetSourceURL();
-            jTextArea1.append(msgString3);
-
-            //create a connection to the db
-            dbc.connectToServer(sourceURL, "remote", "remote_pass");
-        } catch (Exception e) {
-            errString = "\nProblem connecting to database:: " + e;
-            jTextArea1.append(errString);
-            return;
-        } // end try-catch
-
-        //If there is not connection error, then we form the SQL statement
-        //and then execute it.        
+ 
         try {
             // get the data from the text fields
             description = jTextField5.getText();
@@ -479,43 +445,43 @@ public class InventoryManager extends javax.swing.JFrame {
                 // table
                 case 1:
                     tableSelected = "CULTURE BOXES";
-                    dbc.insert("cultureboxes", productID, quantity, description, perUnitCost);
+                    api.insertCultureBoxes(productID, quantity, description, perUnitCost);
                     break;
                 // if processing equipment is selected then insert inventory into strubs
                 // table
                 case 2:
                     tableSelected = "PROCESSING";
-                    dbc.insert("processing", productID, quantity, description, perUnitCost);
+                    api.insertProcessing(productID, quantity, description, perUnitCost);
                     break;
                 // if genomics are selected then insert inventory into the genomics
                 // table
                 case 3:
                     tableSelected = "GENOMICS";
-                    dbc.insert("genomics", productID, quantity, description, perUnitCost);
+                    api.insertGenomics(productID, quantity, description, perUnitCost);
                     break;
                 // if reference materials are selected then insert inventory into referencematerials
                 // table
                 case 4:
                     tableSelected = "REFERENCE MATERIALS";
-                    dbc.insert("referencematerials", productID, quantity, description, perUnitCost);
+                    api.insertReferenceMaterials(productID, quantity, description, perUnitCost);
                     break;
                 // if seeds are selected then insert inventory into referencematerials
                 // table
                 case 5:
                     tableSelected = "SEEDS";
-                    dbc.insert("seeds", productID, quantity, description, perUnitCost);
+                    api.insertSeeds(productID, quantity, description, perUnitCost);
                     break;
                 // if shrubs are selected then insert inventory into referencematerials
                 // table
                 case 6:
                     tableSelected = "SHRUBS";
-                    dbc.insert("SHRUBS", productID, quantity, description, perUnitCost);
+                    api.insertShrubs(productID, quantity, description, perUnitCost);
                     break;
                 // if trees are selected then insert inventory into referencematerials
                 // table
                 case 7:
                     tableSelected = "TREES";
-                    dbc.insert("TREES", productID, quantity, description, perUnitCost);
+                    api.insertCultureBoxes(productID, quantity, description, perUnitCost);
                     break;
                 default:
                     break;
@@ -537,7 +503,7 @@ public class InventoryManager extends javax.swing.JFrame {
 
         // This button will list the inventory for the product selected by the
         // radio button
-        ResultSet res = null;           // SQL query result set pointer
+        List<Product> res = null;       // API reques result set pointer
         String tableSelected = null;    // String used to determine which data table to use
         String errString = null;        // String for displaying errors
         String msgString = null;        // String for displaying non-error messages
@@ -556,26 +522,7 @@ public class InventoryManager extends javax.swing.JFrame {
         jTextField5.setText("");
         jTextArea1.setText("");
 
-        //Now, if there was no error in the data fields, we try to
-        //connect to the database.
-        try {
-            jTextArea1.setText(msgString1);
-            jTextArea1.append(msgString2);
-
-            //define the data source
-            String sourceURL = GetSourceURL();
-            jTextArea1.append(msgString3);
-
-            //create a connection to the db
-            dbc.connectToServer(sourceURL, "remote", "remote_pass");
-        } catch (Exception e) {
-            errString = "\nProblem connecting to database:: " + e;
-            jTextArea1.append(errString);
-            return;
-        } // end try-catch
-
-        //If there is not connection error, then we form the SQL statement
-        //and then execute it.
+        //Form the SQL statement and then execute it.
         try {
             // now we build a query to list the inventory table contents
             // for the user
@@ -583,53 +530,53 @@ public class InventoryManager extends javax.swing.JFrame {
                 // ... here is the SQL for culture boxes
                 case 1:
                     tableSelected = "CULTURE BOXES";
-                    res = dbc.selectAll("cultureboxes");
+                    res = api.getCultureBoxes();
                     break;
                 // ... here is the SQL for processing
                 case 2:
                     tableSelected = "PROCESSING";
-                    res = dbc.selectAll("processing");
+                    res = api.getProcessing();
                     break;
                 // ... here is the SQL for genomics
                 case 3:
                     tableSelected = "GENOMICS";
-                    res = dbc.selectAll("genomics");
+                    res = api.getGenomics();
                     break;
                 // if reference materials are selected then insert inventory into referencematerials
                 // table
                 case 4:
                     tableSelected = "REFERENCE MATERIALS";
-                    res = dbc.selectAll("referencematerials");
+                    res = api.getReferenceMaterials();
                     break;
                 // if seeds are selected then insert inventory into referencematerials
                 // table
                 case 5:
                     tableSelected = "SEEDS";
-                    res = dbc.selectAll("seeds");
+                    res = api.getSeeds();
                     break;
                 // if shrubs are selected then insert inventory into referencematerials
                 // table
                 case 6:
                     tableSelected = "SHRUBS";
-                    res = dbc.selectAll("shrubs");
+                    res = api.getShrubs();
                     break;
                 // if trees are selected then insert inventory into referencematerials
                 // table
                 case 7:
                     tableSelected = "TREES";
-                    res = dbc.selectAll("trees");
+                    res = api.getTrees();
                     break;
                 default:
                     break;
             }
 
-            // Now we list the inventory for the selected table
-            while (res.next()) {
-                msgString = tableSelected + ">>" + res.getString(1) + "::"
-                        + res.getString(2) + " :: " + res.getString(3) + "::"
-                        + res.getString(4);
-                jTextArea1.append("\n" + msgString);
-            } // while
+            // Now we list the inventory for the selected table            
+            for (Product p : res) {
+                msgString = tableSelected + ">>" + p.getProductCode() + "::" + 
+                        p.getDescription() + " :: " + p.getPrice() + "::" + 
+                        p.getQuantity();
+                jTextArea1.append(msgString + "\n");
+            } // for
 
         } catch (Exception e) {
             errString = "\nProblem with " + tableSelected + " query:: " + e;
@@ -659,23 +606,10 @@ public class InventoryManager extends javax.swing.JFrame {
             jTextArea1.setText("");
             jTextArea1.append("\nNo items selected...\nSELECT ENTIRE INVENTORY LINE TO ADD ITEM TO ORDER\n(TRIPLE CLICK ITEM LINE)");
         }
-
-        // Now we delete the inventory item indicated by the productID we
-        // parsed out above from the indicated table.
-        try {
-            jTextArea1.setText("");
-            jTextArea1.append("Deleting ProductID: " + productID);
-
-            String sourceURL = GetSourceURL();
-            jTextArea1.append(msgString3);
-
-            //create a connection to the databases
-            dbc.connectToServer(sourceURL, "remote", "remote_pass");
-        } catch (Exception e) {
-            errString = "\nProblem connecting to database:: " + e;
-            jTextArea1.append(errString);
-            return;
-        } // end try-catch
+        
+        jTextArea1.setText("");
+        jTextArea1.append("Deleting ProductID: " + productID);
+        jTextArea1.append(msgString3);
 
         //If there is no connection error, then we form the SQL statement
         //to delete the inventory item and then execute it.
@@ -683,19 +617,19 @@ public class InventoryManager extends javax.swing.JFrame {
             switch (but_sel) {
                 // if culture boxes inventory selected
                 case 1:
-                    dbc.delete("cultureboxes", "productid", productID);
+                    api.delete("cultureboxes", "productid", productID);
                     break;
                 // if processing equipment inventory selected
                 case 2:
-                    dbc.delete("processing", "productid", productID);
+                    api.delete("processing", "productid", productID);
                     break;
                 // if genomics inventory selected
                 case 3:
-                    dbc.delete("genomics", "productid", productID);
+                    api.delete("genomics", "productid", productID);
                     break;
                 // if reference materials  inventory selected
                 case 4:
-                    dbc.delete("referencematerials", "productid", productID);
+                    api.delete("referencematerials", "productid", productID);
                     break;
                 // if seeds inventory selected
                 case 5:
@@ -815,10 +749,6 @@ public class InventoryManager extends javax.swing.JFrame {
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
         jRadioButton1.setSelected(false);
@@ -980,7 +910,6 @@ public class InventoryManager extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;

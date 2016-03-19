@@ -368,6 +368,21 @@ class RmiApi implements IRmiApi {
         }
         return -1;
     }
+    
+    @Override
+    public int deleteShrubs(String productID) throws RemoteException {
+        try {
+            int res = inventoryStatement.executeUpdate("INSERT INTO shrubs (productid, "
+                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + productID + "', " + "'" + description + "', "
+                    + quantity + ", " + perUnitCost + ");");
+            if (res != -1)
+                return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+        }
+        return -1;
+    }
 
     @Override
     public int createOrderItemTable(String tableName) throws RemoteException {
