@@ -175,4 +175,109 @@ class RmiApi implements IRmiApi {
         return null;
     }
 
+    @Override
+    public List<Product> getShrubs() throws RemoteException {
+        try {
+            ResultSet res = inventoryStatement.executeQuery("Select * from shrubs");
+            List<Product> products = new ArrayList<>();
+            while (res.next()) {
+                Product product = new Product();
+                product.setProductCode(res.getString(1));
+                product.setDescription(res.getString(2));
+                product.setQuantity(res.getInt(3));
+                product.setPrice(res.getFloat(4));
+                products.add(product);
+
+            }
+            return products;
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Product> getSeeds() throws RemoteException {
+        try {
+            ResultSet res = inventoryStatement.executeQuery("Select * from seeds");
+            List<Product> products = new ArrayList<>();
+            while (res.next()) {
+                Product product = new Product();
+                product.setProductCode(res.getString(1));
+                product.setDescription(res.getString(2));
+                product.setQuantity(res.getInt(3));
+                product.setPrice(res.getFloat(4));
+                products.add(product);
+
+            }
+            return products;
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    @Override
+    public int createOrderItemTable(String tableName) throws RemoteException {
+        try {
+            String SQLstatement = ("CREATE TABLE " + tableName
+                    + "(item_id int unsigned not null auto_increment primary key, "
+                    + "product_id varchar(20), description varchar(80), "
+                    + "item_price float(7,2) );");
+            int result = orderInfoStatement.executeUpdate(SQLstatement);
+
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Constansts.INVALID_RESULT;
+    }
+
+    @Override
+    public int dropOrderItemTable(String tableName) throws RemoteException {
+        try {
+            String SQLstatement = ("DROP TABLE " + tableName + ";");
+            int result = orderInfoStatement.executeUpdate(SQLstatement);
+
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Constansts.INVALID_RESULT;
+    }
+
+    @Override
+    public int createOrder(Order order) throws RemoteException {
+        try {
+            String SQLstatement = ("INSERT INTO orders (order_date, " + "first_name, "
+                    + "last_name, address, phone, total_cost, shipped, "
+                    + "ordertable) VALUES ( '" + order.getDate() + "', "
+                    + "'" + order.getFirstName() + "', " + "'" + order.getLastName() + "', "
+                    + "'" + order.getAddress() + "', " + "'" + order.getPhone() + "', "
+                    + order.getCost() + ", " + order.getShippedStatus() + ", '" + order.getOrderTableName() + "' );");
+            int result = orderInfoStatement.executeUpdate(SQLstatement);
+
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Constansts.INVALID_RESULT;
+    }
+
+    @Override
+    public int createOrderItem(String tableName, String productId, String description, float perUnitCost) throws RemoteException {
+        try {
+            String SQLstatement = ("INSERT INTO " + tableName
+                    + " (product_id, description, item_price) "
+                    + "VALUES ( '" + productId + "', " + "'"
+                    + description + "', " + perUnitCost + " );");
+            int result = orderInfoStatement.executeUpdate(SQLstatement);
+
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Constansts.INVALID_RESULT;
+    }
+
 }

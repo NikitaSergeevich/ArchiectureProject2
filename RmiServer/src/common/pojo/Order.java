@@ -22,6 +22,8 @@ public class Order implements Serializable {
     private String date;
     private String address;
     private int shippedStatus;
+    private String orderTableName;
+    private float cost;
 
     /**
      * @return the tableName
@@ -147,6 +149,34 @@ public class Order implements Serializable {
      */
     public void setOrderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    /**
+     * @return the orderTableName
+     */
+    public String getOrderTableName() {
+        return orderTableName;
+    }
+
+    /**
+     * @param orderTableName the orderTableName to set
+     */
+    public void setOrderTableName(String orderTableName) {
+        this.orderTableName = orderTableName;
+    }
+
+    /**
+     * @return the cost
+     */
+    public float getCost() {
+        return cost;
+    }
+
+    /**
+     * @param cost the cost to set
+     */
+    public void setCost(float cost) {
+        this.cost = cost;
     }
 
 }
