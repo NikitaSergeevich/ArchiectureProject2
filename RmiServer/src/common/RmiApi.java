@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rmiserver;
+package common;
 
-import common.Constansts;
-import common.IRmiApi;
 import common.pojo.Order;
 import common.pojo.OrderItem;
 import common.pojo.Product;
@@ -24,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author isakhankov
  */
-class RmiApi implements IRmiApi {
+public class RmiApi implements IRmiApi {
 
     private Statement orderInfoStatement;
     private Statement inventoryStatement;
@@ -73,7 +71,7 @@ class RmiApi implements IRmiApi {
         try {
             String SQLStatement = "Select * from orders";
             ResultSet res = orderInfoStatement.executeQuery(SQLStatement);
-            List<Order> orders = new ArrayList<Order>();
+            List<Order> orders = new ArrayList<>();
             while (res.next()) {
                 Order order = new Order();
                 order.setOrderNumber(res.getString(1));
@@ -98,7 +96,7 @@ class RmiApi implements IRmiApi {
         try {
             String SQLStatement = "SELECT * FROM " + orderTable;
             ResultSet res = orderInfoStatement.executeQuery(SQLStatement);
-            List<OrderItem> items = new ArrayList<OrderItem>();
+            List<OrderItem> items = new ArrayList<>();
             while (res.next()) {
                 OrderItem item = new OrderItem();
                 item.setId(res.getString(1));
@@ -457,11 +455,10 @@ class RmiApi implements IRmiApi {
     public List<Product> decrementShrubs(String productID) {
         String SQLStatement1 = ("UPDATE shrubs set quantity=(quantity-1) where product_code = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from shrubs where product_code = '" + productID + "';");
-        ResultSet res = null;
         try {
             // execute the delete query
             inventoryStatement.executeUpdate(SQLStatement1);
-            res = inventoryStatement.executeQuery(SQLStatement2);
+            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -476,11 +473,10 @@ class RmiApi implements IRmiApi {
     public List<Product> decrementTrees(String productID) {
         String SQLStatement1 = ("UPDATE trees set quantity=(quantity-1) where product_code = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from trees where product_code = '" + productID + "';");
-        ResultSet res = null;
         try {
             // execute the delete query
             inventoryStatement.executeUpdate(SQLStatement1);
-            res = inventoryStatement.executeQuery(SQLStatement2);
+            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -495,11 +491,10 @@ class RmiApi implements IRmiApi {
     public List<Product> decrementSeeds(String productID) {
         String SQLStatement1 = ("UPDATE seeds set quantity=(quantity-1) where product_code = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from seeds where product_code = '" + productID + "';");
-        ResultSet res = null;
         try {
             // execute the delete query
             inventoryStatement.executeUpdate(SQLStatement1);
-            res = inventoryStatement.executeQuery(SQLStatement2);
+            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -514,11 +509,10 @@ class RmiApi implements IRmiApi {
     public List<Product> decrementCultureBoxes(String productID) {
         String SQLStatement1 = ("UPDATE cultureboxes set quantity=(quantity-1) where productid = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from cultureboxes where productid = '" + productID + "';");
-        ResultSet res = null;
         try {
             // execute the delete query
             inventoryStatement.executeUpdate(SQLStatement1);
-            res = inventoryStatement.executeQuery(SQLStatement2);
+            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -533,11 +527,10 @@ class RmiApi implements IRmiApi {
     public List<Product> decrementGenomics(String productID) {
         String SQLStatement1 = ("UPDATE genomics set quantity=(quantity-1) where productid = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from genomics where productid = '" + productID + "';");
-        ResultSet res = null;
         try {
             // execute the delete query
             inventoryStatement.executeUpdate(SQLStatement1);
-            res = inventoryStatement.executeQuery(SQLStatement2);
+            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -552,11 +545,10 @@ class RmiApi implements IRmiApi {
     public List<Product> decrementProcessing(String productID) {
         String SQLStatement1 = ("UPDATE processing set quantity=(quantity-1) where productid = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from processing where productid = '" + productID + "';");
-        ResultSet res = null;
         try {
             // execute the delete query
             inventoryStatement.executeUpdate(SQLStatement1);
-            res = inventoryStatement.executeQuery(SQLStatement2);
+            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -571,11 +563,10 @@ class RmiApi implements IRmiApi {
     public List<Product> decrementReferenceMaterials(String productID) {
         String SQLStatement1 = ("UPDATE referencematerials set quantity=(quantity-1) where productid = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from referencematerials where productid = '" + productID + "';");
-        ResultSet res = null;
         try {
             // execute the delete query
             inventoryStatement.executeUpdate(SQLStatement1);
-            res = inventoryStatement.executeQuery(SQLStatement2);
+            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }

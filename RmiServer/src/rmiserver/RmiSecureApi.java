@@ -6,6 +6,8 @@
 package rmiserver;
 
 import common.Constansts;
+import common.IRmiApi;
+import common.RmiApi;
 import common.IRmiSecureApi;
 import common.pojo.Order;
 import common.pojo.OrderItem;
@@ -29,7 +31,7 @@ public class RmiSecureApi implements IRmiSecureApi {
 
     private Statement userStatement;
 
-    private final RmiApi api = new RmiApi();
+    private final IRmiApi api = new RmiApi();
     private static final Random random = new Random();
     private final UserActivityLogger logger = new UserActivityLogger();
 
