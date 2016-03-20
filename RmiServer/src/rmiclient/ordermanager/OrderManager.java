@@ -592,6 +592,9 @@ public class OrderManager extends javax.swing.JFrame {
                 Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+        } else {
+            errString = "\nMissing customer information!!!\n";
+            jTextArea3.append(errString);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
