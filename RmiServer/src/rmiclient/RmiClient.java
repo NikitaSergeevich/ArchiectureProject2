@@ -7,6 +7,7 @@ package rmiclient;
 
 import common.Constansts;
 import common.IRmiApi;
+import common.IRmiSecureApi;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -25,13 +26,13 @@ public class RmiClient {
         }
         try {
             Registry registry = LocateRegistry.getRegistry(1099);
-            IRmiApi comp = (IRmiApi) registry.lookup(Constansts.RMI_NAME);
-            
+            IRmiSecureApi comp = (IRmiSecureApi) registry.lookup(Constansts.RMI_NAME);
+
             String goodUser = comp.login("test", "test", Constansts.INVENTORY_MANAGER);
             System.out.println(goodUser);
             String badUser = comp.login("root", "test", Constansts.INVENTORY_MANAGER);
             System.out.println(badUser);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }

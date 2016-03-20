@@ -7,6 +7,7 @@ package rmiclient.ordermanager;
 
 import common.Constansts;
 import common.IRmiApi;
+import common.IRmiSecureApi;
 import rmiclient.LoginForm;
 
 /**
@@ -28,7 +29,7 @@ public class OrderManagerLogin {
             public void run() {
                 new LoginForm(Constansts.ORDER_MANAGER) {
                     @Override
-                    protected void openApplication(IRmiApi api, String token) {
+                    protected void openApplication(IRmiSecureApi api, String token) {
                         new OrderManager(api, token).setVisible(true);
                     }
 

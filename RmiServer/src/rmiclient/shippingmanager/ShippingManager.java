@@ -1,6 +1,7 @@
 package rmiclient.shippingmanager;
 
 import common.IRmiApi;
+import common.IRmiSecureApi;
 import common.pojo.Order;
 import common.pojo.OrderItem;
 import java.awt.event.WindowAdapter;
@@ -31,7 +32,7 @@ public class ShippingManager extends javax.swing.JFrame {
 
     Integer updateOrderID;
     String versionID = "v2.10.10";
-    private final IRmiApi api;
+    private final IRmiSecureApi api;
     private final String token;
 
     /**
@@ -40,7 +41,7 @@ public class ShippingManager extends javax.swing.JFrame {
      * @param api
      * @param token
      */
-    public ShippingManager(IRmiApi api, String token) {
+    public ShippingManager(IRmiSecureApi api, String token) {
         this.api = api;
         this.token = token;
         initComponents();

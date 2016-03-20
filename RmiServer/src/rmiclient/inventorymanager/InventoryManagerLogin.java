@@ -6,7 +6,7 @@
 package rmiclient.inventorymanager;
 
 import common.Constansts;
-import common.IRmiApi;
+import common.IRmiSecureApi;
 import rmiclient.LoginForm;
 
 /**
@@ -28,7 +28,7 @@ public class InventoryManagerLogin {
             public void run() {
                 new LoginForm(Constansts.INVENTORY_MANAGER) {
                     @Override
-                    protected void openApplication(IRmiApi api, String token) {
+                    protected void openApplication(IRmiSecureApi api, String token) {
                         new InventoryManager(api, token).setVisible(true);
                     }
 

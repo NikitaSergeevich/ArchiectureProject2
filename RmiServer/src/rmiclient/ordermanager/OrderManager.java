@@ -2,6 +2,7 @@ package rmiclient.ordermanager;
 
 import common.Constansts;
 import common.IRmiApi;
+import common.IRmiSecureApi;
 import common.pojo.Order;
 import common.pojo.Product;
 import java.awt.event.WindowAdapter;
@@ -31,7 +32,7 @@ import javax.swing.JOptionPane;
 public class OrderManager extends javax.swing.JFrame {
 
     String versionID = "v2.10.10";
-    private final IRmiApi api;
+    private final IRmiSecureApi api;
     private final String token;
 
     /**
@@ -40,7 +41,7 @@ public class OrderManager extends javax.swing.JFrame {
      * @param api
      * @param token
      */
-    public OrderManager(IRmiApi api, String token) {
+    public OrderManager(IRmiSecureApi api, String token) {
         this.api = api;
         this.token = token;
 

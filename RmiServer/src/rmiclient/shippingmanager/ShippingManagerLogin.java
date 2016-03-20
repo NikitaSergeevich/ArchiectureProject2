@@ -7,6 +7,7 @@ package rmiclient.shippingmanager;
 
 import common.Constansts;
 import common.IRmiApi;
+import common.IRmiSecureApi;
 import rmiclient.LoginForm;
 
 /**
@@ -28,7 +29,7 @@ public class ShippingManagerLogin {
             public void run() {
                 new LoginForm(Constansts.SHIPPING_MANAGER) {
                     @Override
-                    protected void openApplication(IRmiApi api, String token) {
+                    protected void openApplication(IRmiSecureApi api, String token) {
                         new ShippingManager(api, token).setVisible(true);
                     }
 
