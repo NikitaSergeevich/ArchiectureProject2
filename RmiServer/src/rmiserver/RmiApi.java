@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +32,8 @@ class RmiApi implements IRmiApi {
     private Statement userStatement;
     private Statement inventoryStatement;
     private Statement leaftechStatement;
+
+    private static final Random random = new Random();
 
     public RmiApi() {
         try {
@@ -60,11 +63,16 @@ class RmiApi implements IRmiApi {
             String query = "SELECT password FROM user WHERE login = '" + login
                     + "' and applicationname = '" + applicationName + "'";
             ResultSet result = userStatement.executeQuery(query);
+
             if (result.next()) {
                 String expectedPassword = result.getString(Constansts.USER_PASSWORD);
                 if (password.equals(expectedPassword)) {
                     logger.logLogin(login, applicationName);
-                    return generateToken();
+                    String token = generateToken();
+                    query = "Update user set token = '" + token + "' WHERE login = '" + login
+                            + "' and applicationname = '" + applicationName + "'";
+                    userStatement.executeUpdate(query);
+                    return token;
                 }
             }
         } catch (SQLException ex) {
@@ -73,9 +81,28 @@ class RmiApi implements IRmiApi {
         return null;
     }
 
+    @Override
+    public void logout(String token) throws RemoteException {
+        try {
+            String query = "SELECT login, applicationname FROM user WHERE token = '" + token
+                    + "'";
+            ResultSet result = userStatement.executeQuery(query);
+
+            if (result.next()) {
+                String login = result.getString(Constansts.USER_LOGIN);
+                String applicationName = result.getString(Constansts.USER_APPLICATION_NAME);
+                logger.logLogout(login, applicationName);
+            }
+            query = "UPDATE user SET token= null WHERE token = '" + token
+                    + "'";
+            userStatement.executeUpdate(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private String generateToken() {
-        //TODO
-        return "Super Token";
+        return "token" + random.nextLong();
     }
 
     @Override
@@ -157,9 +184,8 @@ class RmiApi implements IRmiApi {
         }
         return -1;
     }
-    
-    private List<Product> parseProductResultSet(ResultSet res)
-    {
+
+    private List<Product> parseProductResultSet(ResultSet res) {
         List<Product> products = new ArrayList<>();
         try {
             while (res.next()) {
@@ -181,22 +207,24 @@ class RmiApi implements IRmiApi {
     public List<Product> getShrubs() throws RemoteException {
         try {
             ResultSet res = inventoryStatement.executeQuery("Select * from shrubs");
-            if (res != null)
+            if (res != null) {
                 return parseProductResultSet(res);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     @Override
     public List<Product> getTrees() throws RemoteException {
         try {
             ResultSet res = inventoryStatement.executeQuery("Select * from trees");
-            if (res != null)
+            if (res != null) {
                 return parseProductResultSet(res);
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -205,14 +233,15 @@ class RmiApi implements IRmiApi {
     public List<Product> getSeeds() throws RemoteException {
         try {
             ResultSet res = inventoryStatement.executeQuery("Select * from seeds");
-            if (res != null)
+            if (res != null) {
                 return parseProductResultSet(res);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
+
     @Override
     public List<Product> getCultureBoxes() throws RemoteException {
         try {
@@ -224,7 +253,7 @@ class RmiApi implements IRmiApi {
         }
         return null;
     }
-    
+
     @Override
     public List<Product> getGenomics() throws RemoteException {
         try {
@@ -236,7 +265,7 @@ class RmiApi implements IRmiApi {
         }
         return null;
     }
-    
+
     @Override
     public List<Product> getProcessing() throws RemoteException {
         try {
@@ -248,7 +277,7 @@ class RmiApi implements IRmiApi {
         }
         return null;
     }
-    
+
     @Override
     public List<Product> getReferenceMaterials() throws RemoteException {
         try {
@@ -260,115 +289,122 @@ class RmiApi implements IRmiApi {
         }
         return null;
     }
-    
+
     @Override
-    public int insertShrubs(String productID, int quantity, String description, 
+    public int insertShrubs(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException {
         try {
             int res = inventoryStatement.executeUpdate("INSERT INTO shrubs (product_code, "
                     + "productdescription, productquantity, productprice) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
-            if (res != -1)
+            if (res != -1) {
                 return res;
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
-    
+
     @Override
-    public int insertTrees(String productID, int quantity, String description, 
+    public int insertTrees(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException {
         try {
             int res = inventoryStatement.executeUpdate("INSERT INTO trees (product_code, "
                     + "productdescription, productquantity, productprice) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
-            if (res != -1)
+            if (res != -1) {
                 return res;
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
-    
+
     @Override
-    public int insertSeeds(String productID, int quantity, String description, 
+    public int insertSeeds(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException {
         try {
             int res = inventoryStatement.executeUpdate("INSERT INTO seeds (product_code, "
                     + "productdescription, productquantity, productprice) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
-            if (res != -1)
+            if (res != -1) {
                 return res;
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
-    
+
     @Override
-    public int insertCultureBoxes(String productID, int quantity, String description, 
+    public int insertCultureBoxes(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException {
         try {
             int res = leaftechStatement.executeUpdate("INSERT INTO cultureboxes (productid, "
                     + "productdescription, productquantity, productprice) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
-            if (res != -1)
+            if (res != -1) {
                 return res;
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
-    
+
     @Override
-    public int insertGenomics(String productID, int quantity, String description, 
+    public int insertGenomics(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException {
         try {
             int res = leaftechStatement.executeUpdate("INSERT INTO genomics (productid, "
                     + "productdescription, productquantity, productprice) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
-            if (res != -1)
+            if (res != -1) {
                 return res;
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
-    
+
     @Override
-    public int insertProcessing(String productID, int quantity, String description, 
+    public int insertProcessing(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException {
         try {
             int res = leaftechStatement.executeUpdate("INSERT INTO processing (productid, "
                     + "productdescription, productquantity, productprice) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
-            if (res != -1)
+            if (res != -1) {
                 return res;
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
-    
+
     @Override
-    public int insertReferenceMaterials(String productID, int quantity, String description, 
+    public int insertReferenceMaterials(String productID, int quantity, String description,
             float perUnitCost) throws RemoteException {
         try {
             int res = leaftechStatement.executeUpdate("INSERT INTO referencematerials (productid, "
                     + "productdescription, productquantity, productprice) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
-            if (res != -1)
+            if (res != -1) {
                 return res;
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }

@@ -1,9 +1,13 @@
 package rmiclient.inventorymanager;
 
 import common.IRmiApi;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import rmiclient.ordermanager.OrderManager;
 import common.pojo.Product;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -64,6 +68,19 @@ public class InventoryManager extends javax.swing.JFrame {
         jRadioButton5.setSelected(false);
         jRadioButton6.setSelected(false);
         jRadioButton7.setSelected(false);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    super.windowClosing(e);
+                    api.logout(token);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        });
     }
 
     /**
@@ -588,14 +605,7 @@ public class InventoryManager extends javax.swing.JFrame {
 
         // This button deletes the item from the database highlighed by the user
         String productID = null;            // Product ID pnemonic
-        Boolean IndexNotFound;              // Flag indicating a string index was not found.
-        Boolean connectError = false;       // Error flag
-        Connection DBConn = null;           // MySQL connection handle
         String errString = null;            // String for displaying errors
-        int executeUpdateVal;               // Return value from execute indicating effected rows
-        java.sql.Statement s = null;        // SQL statement pointer
-        String SQLstatement = null;         // String for building SQL queries
-        IndexNotFound = false;              // Flag indicating that a string index was not found
 
         // Blank string check
         productID = checkselection();
@@ -662,7 +672,6 @@ public class InventoryManager extends javax.swing.JFrame {
         // This button decrements the inventory count in the database of the item highlighed by the user
         String productID = null;            // Product ID pnemonic
         String errString = null;            // String for displaying errors
-        int executeUpdateVal;               // Return value from execute indicating effected rows
         String msgString = null;            // String for displaying non-error messages
         String tableSelected = null;        // String used to determine which data table to use
         List<Product> res = null;       // API reques result set pointer
