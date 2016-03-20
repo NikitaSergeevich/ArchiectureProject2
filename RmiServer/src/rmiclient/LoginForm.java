@@ -6,7 +6,7 @@
 package rmiclient;
 
 import common.Constansts;
-import common.IRmiApi;
+import common.IRmiSecureApi;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -130,7 +130,7 @@ public class LoginForm extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             Registry registry = LocateRegistry.getRegistry(hostNameField.getText(), 1099);
-            IRmiApi api = (IRmiApi) registry.lookup(Constansts.RMI_NAME);
+            IRmiSecureApi api = (IRmiSecureApi) registry.lookup(Constansts.RMI_NAME);
 
             String token = api.login(loginField.getText(), PasswordField.getText(), applicationName);
             if (token != null) {
@@ -158,7 +158,7 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JTextField loginField;
     // End of variables declaration//GEN-END:variables
 
-    protected void openApplication(IRmiApi api, String token) {
+    protected void openApplication(IRmiSecureApi api, String token) {
 
     }
 }

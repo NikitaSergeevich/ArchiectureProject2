@@ -1,6 +1,6 @@
 package rmiclient.inventorymanager;
 
-import common.IRmiApi;
+import common.IRmiSecureApi;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import rmiclient.ordermanager.OrderManager;
 import common.pojo.Product;
 import java.util.List;
+import common.ICommonApi;
 
 /**
  * ****************************************************************************
@@ -44,7 +45,7 @@ public class InventoryManager extends javax.swing.JFrame {
     String msgString1 = "\n>> Establishing Driver...";
     String msgString2 = "\n>> Setting up URL...";
     String msgString3 = "\n>> Establishing connection with: "; //+ sourceURL
-    private final IRmiApi api;
+    private final IRmiSecureApi api;
     private final String token;
 
     /**
@@ -53,7 +54,7 @@ public class InventoryManager extends javax.swing.JFrame {
      * @param comp
      * @param token
      */
-    public InventoryManager(IRmiApi comp, String token) {
+    public InventoryManager(IRmiSecureApi comp, String token) {
 
         this.api = comp;
         this.token = token;
@@ -449,7 +450,7 @@ public class InventoryManager extends javax.swing.JFrame {
         if (but_sel == 0 || checkfields()) {
             return;
         }
- 
+
         try {
             // get the data from the text fields
             description = jTextField5.getText();
@@ -462,43 +463,43 @@ public class InventoryManager extends javax.swing.JFrame {
                 // table
                 case 1:
                     tableSelected = "CULTURE BOXES";
-                    api.insertCultureBoxes(productID, quantity, description, perUnitCost);
+                    api.insertCultureBoxes(productID, quantity, description, perUnitCost, token);
                     break;
                 // if processing equipment is selected then insert inventory into strubs
                 // table
                 case 2:
                     tableSelected = "PROCESSING";
-                    api.insertProcessing(productID, quantity, description, perUnitCost);
+                    api.insertProcessing(productID, quantity, description, perUnitCost, token);
                     break;
                 // if genomics are selected then insert inventory into the genomics
                 // table
                 case 3:
                     tableSelected = "GENOMICS";
-                    api.insertGenomics(productID, quantity, description, perUnitCost);
+                    api.insertGenomics(productID, quantity, description, perUnitCost, token);
                     break;
                 // if reference materials are selected then insert inventory into referencematerials
                 // table
                 case 4:
                     tableSelected = "REFERENCE MATERIALS";
-                    api.insertReferenceMaterials(productID, quantity, description, perUnitCost);
+                    api.insertReferenceMaterials(productID, quantity, description, perUnitCost, token);
                     break;
                 // if seeds are selected then insert inventory into referencematerials
                 // table
                 case 5:
                     tableSelected = "SEEDS";
-                    api.insertSeeds(productID, quantity, description, perUnitCost);
+                    api.insertSeeds(productID, quantity, description, perUnitCost, token);
                     break;
                 // if shrubs are selected then insert inventory into referencematerials
                 // table
                 case 6:
                     tableSelected = "SHRUBS";
-                    api.insertShrubs(productID, quantity, description, perUnitCost);
+                    api.insertShrubs(productID, quantity, description, perUnitCost, token);
                     break;
                 // if trees are selected then insert inventory into referencematerials
                 // table
                 case 7:
                     tableSelected = "TREES";
-                    api.insertCultureBoxes(productID, quantity, description, perUnitCost);
+                    api.insertCultureBoxes(productID, quantity, description, perUnitCost, token);
                     break;
                 default:
                     break;
@@ -547,41 +548,41 @@ public class InventoryManager extends javax.swing.JFrame {
                 // ... here is the SQL for culture boxes
                 case 1:
                     tableSelected = "CULTURE BOXES";
-                    res = api.getCultureBoxes();
+                    res = api.getCultureBoxes(token);
                     break;
                 // ... here is the SQL for processing
                 case 2:
                     tableSelected = "PROCESSING";
-                    res = api.getProcessing();
+                    res = api.getProcessing(token);
                     break;
                 // ... here is the SQL for genomics
                 case 3:
                     tableSelected = "GENOMICS";
-                    res = api.getGenomics();
+                    res = api.getGenomics(token);
                     break;
                 // if reference materials are selected then insert inventory into referencematerials
                 // table
                 case 4:
                     tableSelected = "REFERENCE MATERIALS";
-                    res = api.getReferenceMaterials();
+                    res = api.getReferenceMaterials(token);
                     break;
                 // if seeds are selected then insert inventory into referencematerials
                 // table
                 case 5:
                     tableSelected = "SEEDS";
-                    res = api.getSeeds();
+                    res = api.getSeeds(token);
                     break;
                 // if shrubs are selected then insert inventory into referencematerials
                 // table
                 case 6:
                     tableSelected = "SHRUBS";
-                    res = api.getShrubs();
+                    res = api.getShrubs(token);
                     break;
                 // if trees are selected then insert inventory into referencematerials
                 // table
                 case 7:
                     tableSelected = "TREES";
-                    res = api.getTrees();
+                    res = api.getTrees(token);
                     break;
                 default:
                     break;
@@ -589,9 +590,9 @@ public class InventoryManager extends javax.swing.JFrame {
 
             // Now we list the inventory for the selected table            
             for (Product p : res) {
-                msgString = tableSelected + ">>" + p.getProductCode() + "::" + 
-                        p.getDescription() + " :: " + p.getPrice() + "::" + 
-                        p.getQuantity();
+                msgString = tableSelected + ">>" + p.getProductCode() + "::"
+                        + p.getDescription() + " :: " + p.getPrice() + "::"
+                        + p.getQuantity();
                 jTextArea1.append(msgString + "\n");
             } // for
 
@@ -617,7 +618,7 @@ public class InventoryManager extends javax.swing.JFrame {
             jTextArea1.append("\nNo items selected...\nSELECT ENTIRE INVENTORY LINE TO ADD ITEM TO ORDER\n(TRIPLE CLICK ITEM LINE)");
             return;
         }
-        
+
         jTextArea1.setText("");
         jTextArea1.append("Deleting ProductID: " + productID);
         jTextArea1.append(msgString3);
@@ -628,31 +629,31 @@ public class InventoryManager extends javax.swing.JFrame {
             switch (but_sel) {
                 // if culture boxes inventory selected
                 case 1:
-                    api.deleteCultureBoxes(productID);
+                    api.deleteCultureBoxes(productID, token);
                     break;
                 // if processing equipment inventory selected
                 case 2:
-                    api.deleteProcessing(productID);
+                    api.deleteProcessing(productID, token);
                     break;
                 // if genomics inventory selected
                 case 3:
-                    api.deleteGenomics(productID);
+                    api.deleteGenomics(productID, token);
                     break;
                 // if reference materials  inventory selected
                 case 4:
-                    api.deleteReferenceMaterials(productID);
+                    api.deleteReferenceMaterials(productID, token);
                     break;
                 // if seeds inventory selected
                 case 5:
-                    api.deleteSeeds(productID);
+                    api.deleteSeeds(productID, token);
                     break;
                 // if shrubs inventory selected
                 case 6:
-                    api.deleteShrubs(productID);
+                    api.deleteShrubs(productID, token);
                     break;
                 // if trees inventory selected
                 case 7:
-                    api.deleteTrees(productID);
+                    api.deleteTrees(productID, token);
                     break;
                 default:
                     break;
@@ -698,31 +699,31 @@ public class InventoryManager extends javax.swing.JFrame {
             switch (but_sel) {
                 // if culture boxes inventory selected
                 case 1:
-                    res = api.decrementShrubs(productID);
+                    res = api.decrementShrubs(productID, token);
                     break;
                 // if processing equipment inventory selected
                 case 2:
-                    res = api.decrementProcessing(productID);
+                    res = api.decrementProcessing(productID, token);
                     break;
                 // if genomics inventory selected
                 case 3:
-                    res = api.decrementGenomics(productID);
+                    res = api.decrementGenomics(productID, token);
                     break;
                 // if reference materials  inventory selected
                 case 4:
-                    res = api.decrementReferenceMaterials(productID);
+                    res = api.decrementReferenceMaterials(productID, token);
                     break;
                 // if seeds inventory selected
                 case 5:
-                    res = api.decrementSeeds(productID);
+                    res = api.decrementSeeds(productID, token);
                     break;
                 // if shrubs inventory selected
                 case 6:
-                    res = api.decrementShrubs(productID);
+                    res = api.decrementShrubs(productID, token);
                     break;
                 // if trees inventory selected
                 case 7:
-                    res = api.decrementTrees(productID);
+                    res = api.decrementTrees(productID, token);
                     break;
                 default:
                     break;
@@ -730,15 +731,14 @@ public class InventoryManager extends javax.swing.JFrame {
 
             // display result for the user
             // let the user know all went well
-            jTextArea1.append("\n\n" + productID + " inventory decremented...");            
+            jTextArea1.append("\n\n" + productID + " inventory decremented...");
             // Now we list the inventory for the selected table            
             for (Product p : res) {
-                msgString = tableSelected + ">>" + p.getProductCode() + "::" + 
-                        p.getDescription() + " :: " + p.getPrice() + "::" + 
-                        p.getQuantity();
+                msgString = tableSelected + ">>" + p.getProductCode() + "::"
+                        + p.getDescription() + " :: " + p.getPrice() + "::"
+                        + p.getQuantity();
                 jTextArea1.append(msgString + "\n");
             } // for
-
 
             //jTextArea1.append("\n\n Number of items updated: " + executeUpdateVal );
         } catch (Exception e) {

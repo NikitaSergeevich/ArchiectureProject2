@@ -18,6 +18,34 @@ USE `useractivities`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `applicationname` varchar(45) DEFAULT NULL,
+  `token` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'test','test','Mr. Test','inventorymanager',NULL),(2,'test','test','Mr. Test','shippingmanager',NULL),(3,'test','test','Mr. Test','ordermanager',NULL);
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `useractivity`
 --
 
@@ -30,7 +58,7 @@ CREATE TABLE `useractivity` (
   `message` varchar(45) DEFAULT NULL,
   `date` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +67,6 @@ CREATE TABLE `useractivity` (
 
 LOCK TABLES `useractivity` WRITE;
 /*!40000 ALTER TABLE `useractivity` DISABLE KEYS */;
-INSERT INTO `useractivity` VALUES (1,'inventorymanager',' User: test has logged in','Fri Mar 18 23:37:05 MSK 2016'),(2,'inventorymanager',' User: \"test\" has logged in','Fri Mar 18 23:39:01 MSK 2016');
 /*!40000 ALTER TABLE `useractivity` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +79,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-18 23:40:10
+-- Dump completed on 2016-03-20 12:59:01

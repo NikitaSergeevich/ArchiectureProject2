@@ -1,7 +1,7 @@
 package rmiclient.ordermanager;
 
 import common.Constansts;
-import common.IRmiApi;
+import common.IRmiSecureApi;
 import common.pojo.Order;
 import common.pojo.Product;
 import java.awt.event.WindowAdapter;
@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  * ****************************************************************************
@@ -31,7 +30,7 @@ import javax.swing.JOptionPane;
 public class OrderManager extends javax.swing.JFrame {
 
     String versionID = "v2.10.10";
-    private final IRmiApi api;
+    private final IRmiSecureApi api;
     private final String token;
 
     /**
@@ -40,7 +39,7 @@ public class OrderManager extends javax.swing.JFrame {
      * @param api
      * @param token
      */
-    public OrderManager(IRmiApi api, String token) {
+    public OrderManager(IRmiSecureApi api, String token) {
         this.api = api;
         this.token = token;
 
@@ -376,7 +375,7 @@ public class OrderManager extends javax.swing.JFrame {
             //Display the data in the textarea
             jTextArea1.setText("");
 
-            List<Product> trees = api.getTrees();
+            List<Product> trees = api.getTrees(token);
             for (Product tree : trees) {
                 msgString = tree.getProductCode() + " : " + tree.getDescription()
                         + " : $" + tree.getPrice() + " : " + tree.getQuantity()
@@ -524,17 +523,17 @@ public class OrderManager extends javax.swing.JFrame {
                 order.setShippedStatus(0);
                 order.setOrderTableName("order" + String.valueOf(rightNow.getTimeInMillis()));
 
-                int result = api.createOrderItemTable(order.getOrderTableName());
+                int result = api.createOrderItemTable(order.getOrderTableName(), token);
                 if (result == Constansts.INVALID_RESULT) {
                     errString = "\nProblem creating order table " + order.getOrderTableName();
                     jTextArea3.append(errString);
                 } else {
-                    result = api.createOrder(order);
+                    result = api.createOrder(order, token);
                     if (result == Constansts.INVALID_RESULT) {
                         errString = "\nProblem with inserting into table orders";
                         jTextArea3.append(errString);
 
-                        result = api.dropOrderItemTable(order.getOrderTableName());
+                        result = api.dropOrderItemTable(order.getOrderTableName(), token);
                         if (result == Constansts.INVALID_RESULT) {
                             errString = "\nProblem deleting unused order table:: "
                                     + order.getOrderTableName();
@@ -567,7 +566,7 @@ public class OrderManager extends javax.swing.JFrame {
                                 sPerUnitCost = orderItem.substring(beginIndex, orderItem.length());
                                 perUnitCost = Float.parseFloat(sPerUnitCost);
 
-                                result = api.createOrderItem(order.getOrderTableName(), productID, description, perUnitCost);
+                                result = api.createOrderItem(order.getOrderTableName(), productID, description, perUnitCost, token);
                                 if (result == Constansts.INVALID_RESULT) {
                                     errString = "\nProblem with inserting into table " + order.getOrderNumber();
                                     jTextArea3.append(errString);
@@ -593,6 +592,9 @@ public class OrderManager extends javax.swing.JFrame {
                 Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+        } else {
+            errString = "\nMissing customer information!!!\n";
+            jTextArea3.append(errString);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -613,7 +615,7 @@ public class OrderManager extends javax.swing.JFrame {
             //Display the data in the textarea
             jTextArea1.setText("");
 
-            List<Product> seeds = api.getSeeds();
+            List<Product> seeds = api.getSeeds(token);
             for (Product seed : seeds) {
                 msgString = seed.getProductCode() + " : " + seed.getDescription()
                         + " : $" + seed.getPrice() + " : " + seed.getQuantity()
@@ -642,7 +644,7 @@ public class OrderManager extends javax.swing.JFrame {
             //Display the data in the textarea
             jTextArea1.setText("");
 
-            List<Product> shrubs = api.getShrubs();
+            List<Product> shrubs = api.getShrubs(token);
             for (Product shurb : shrubs) {
                 msgString = shurb.getProductCode() + " : " + shurb.getDescription()
                         + " : $" + shurb.getPrice() + " : " + shurb.getQuantity()
@@ -673,7 +675,7 @@ public class OrderManager extends javax.swing.JFrame {
             //Display the data in the textarea
             jTextArea1.setText("");
 
-            List<Product> processings = api.getProcessing();
+            List<Product> processings = api.getProcessing(token);
             for (Product processing : processings) {
                 msgString = processing.getProductCode() + " : " + processing.getDescription()
                         + " : $" + processing.getPrice() + " : " + processing.getQuantity()
@@ -700,7 +702,7 @@ public class OrderManager extends javax.swing.JFrame {
             //Display the data in the textarea
             jTextArea1.setText("");
 
-            List<Product> cultureBoxes = api.getCultureBoxes();
+            List<Product> cultureBoxes = api.getCultureBoxes(token);
             for (Product cultureBox : cultureBoxes) {
                 msgString = cultureBox.getProductCode() + " : " + cultureBox.getDescription()
                         + " : $" + cultureBox.getPrice() + " : " + cultureBox.getQuantity()
@@ -727,7 +729,7 @@ public class OrderManager extends javax.swing.JFrame {
             //Display the data in the textarea
             jTextArea1.setText("");
 
-            List<Product> genomics = api.getGenomics();
+            List<Product> genomics = api.getGenomics(token);
             for (Product genomic : genomics) {
                 msgString = genomic.getProductCode() + " : " + genomic.getDescription()
                         + " : $" + genomic.getPrice() + " : " + genomic.getQuantity()
@@ -754,7 +756,7 @@ public class OrderManager extends javax.swing.JFrame {
             //Display the data in the textarea
             jTextArea1.setText("");
 
-            List<Product> referenceMaterials = api.getReferenceMaterials();
+            List<Product> referenceMaterials = api.getReferenceMaterials(token);
             for (Product material : referenceMaterials) {
                 msgString = material.getProductCode() + " : " + material.getDescription()
                         + " : $" + material.getPrice() + " : " + material.getQuantity()

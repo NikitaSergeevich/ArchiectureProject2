@@ -1,10 +1,10 @@
 package rmiserver;
 
 import common.Constansts;
+import common.IRmiSecureApi;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import common.IRmiApi;
 
 /**
  *
@@ -20,14 +20,14 @@ public class RmiServer {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            IRmiApi api = new RmiApi();
-            IRmiApi stub
-                    = (IRmiApi) UnicastRemoteObject.exportObject(api, 0);
+            IRmiSecureApi api = new RmiSecureApi();
+            IRmiSecureApi stub
+                    = (IRmiSecureApi) UnicastRemoteObject.exportObject(api, 0);
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind(Constansts.RMI_NAME, stub);
             System.out.println("Server is running");
         } catch (Exception e) {
-            System.err.println("ComputeEngine exception:");
+            System.err.println("Problems with starting server");
             e.printStackTrace();
         }
     }

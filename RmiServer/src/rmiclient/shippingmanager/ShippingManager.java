@@ -1,6 +1,6 @@
 package rmiclient.shippingmanager;
 
-import common.IRmiApi;
+import common.IRmiSecureApi;
 import common.pojo.Order;
 import common.pojo.OrderItem;
 import java.awt.event.WindowAdapter;
@@ -31,7 +31,7 @@ public class ShippingManager extends javax.swing.JFrame {
 
     Integer updateOrderID;
     String versionID = "v2.10.10";
-    private final IRmiApi api;
+    private final IRmiSecureApi api;
     private final String token;
 
     /**
@@ -40,7 +40,7 @@ public class ShippingManager extends javax.swing.JFrame {
      * @param api
      * @param token
      */
-    public ShippingManager(IRmiApi api, String token) {
+    public ShippingManager(IRmiSecureApi api, String token) {
         this.api = api;
         this.token = token;
         initComponents();
@@ -364,7 +364,7 @@ public class ShippingManager extends javax.swing.JFrame {
         // check is here.
         if (!orderBlank) {
             try {
-                Order order = api.getOrder(Integer.parseInt(orderID));
+                Order order = api.getOrder(Integer.parseInt(orderID), token);
                 orderTable = order.getTableName();
 
                 jTextField2.setText(order.getFirstName()); // first name
@@ -376,7 +376,7 @@ public class ShippingManager extends javax.swing.JFrame {
                 // list the items on the form that comprise the order
                 jTextArea3.setText("");
 
-                List<OrderItem> orderItems = api.getOrderItems(orderTable);
+                List<OrderItem> orderItems = api.getOrderItems(orderTable, token);
                 for (OrderItem orderItem : orderItems) {
                     msgString = orderItem.getId() + ":  PRODUCT ID: " + orderItem.getProductId()
                             + "  DESCRIPTION: " + orderItem.getDescription()
@@ -413,7 +413,7 @@ public class ShippingManager extends javax.swing.JFrame {
         try {
 
             // execute the statement
-            rows = api.updateShippedStatus(updateOrderID, true);
+            rows = api.updateShippedStatus(updateOrderID, true, token);
 
             // if the query worked, then we display the data in TextArea 4 - BTW, its highly
             // unlikely that the row won't exist and if it does the database tables are
@@ -493,7 +493,7 @@ public class ShippingManager extends javax.swing.JFrame {
             // MySQL stores booleans and a TinyInt(1), which we interpret
             // here on the application side as an integer. It works, it just
             // isn't very elegant.
-            List<Order> orders = api.getOrders();
+            List<Order> orders = api.getOrders(token);
             for (Order order : orders) {
                 if (order.getShippedStatus() == 0) {
                     msgString = "ORDER # " + order.getOrderNumber() + " : " + order.getDate()
@@ -544,7 +544,7 @@ public class ShippingManager extends javax.swing.JFrame {
             // MySQL stores booleans and a TinyInt(1), which we interpret
             // here on the application side as an integer. It works, it just
             // isn't very elegant.
-            List<Order> orders = api.getOrders();
+            List<Order> orders = api.getOrders(token);
             for (Order order : orders) {
                 if (order.getShippedStatus() == 1) {
                     msgString = "ORDER # " + order.getOrderNumber() + " : " + order.getDate()
