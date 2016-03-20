@@ -605,6 +605,7 @@ public class InventoryManager extends javax.swing.JFrame {
         if (productID == null) {
             jTextArea1.setText("");
             jTextArea1.append("\nNo items selected...\nSELECT ENTIRE INVENTORY LINE TO ADD ITEM TO ORDER\n(TRIPLE CLICK ITEM LINE)");
+            return;
         }
         
         jTextArea1.setText("");
@@ -617,31 +618,31 @@ public class InventoryManager extends javax.swing.JFrame {
             switch (but_sel) {
                 // if culture boxes inventory selected
                 case 1:
-                    api.delete("cultureboxes", "productid", productID);
+                    api.deleteCultureBoxes(productID);
                     break;
                 // if processing equipment inventory selected
                 case 2:
-                    api.delete("processing", "productid", productID);
+                    api.deleteProcessing(productID);
                     break;
                 // if genomics inventory selected
                 case 3:
-                    api.delete("genomics", "productid", productID);
+                    api.deleteGenomics(productID);
                     break;
                 // if reference materials  inventory selected
                 case 4:
-                    api.delete("referencematerials", "productid", productID);
+                    api.deleteReferenceMaterials(productID);
                     break;
                 // if seeds inventory selected
                 case 5:
-                    dbc.delete("seeds", "product_code", productID);
+                    api.deleteSeeds(productID);
                     break;
                 // if shrubs inventory selected
                 case 6:
-                    dbc.delete("shrubs", "product_code", productID);
+                    api.deleteShrubs(productID);
                     break;
                 // if trees inventory selected
                 case 7:
-                    dbc.delete("trees", "product_code", productID);
+                    api.deleteTrees(productID);
                     break;
                 default:
                     break;
@@ -663,8 +664,8 @@ public class InventoryManager extends javax.swing.JFrame {
         String errString = null;            // String for displaying errors
         int executeUpdateVal;               // Return value from execute indicating effected rows
         String msgString = null;            // String for displaying non-error messages
-        ResultSet res = null;               // SQL query result set pointer
         String tableSelected = null;        // String used to determine which data table to use
+        List<Product> res = null;       // API reques result set pointer
 
         // make sure the selection is not blank
         productID = checkselection();
@@ -674,6 +675,7 @@ public class InventoryManager extends javax.swing.JFrame {
         if (productID == null) {
             jTextArea1.setText("");
             jTextArea1.append("\nNo items selected...\nSELECT ENTIRE INVENTORY LINE TO ADD ITEM TO ORDER\n(TRIPLE CLICK ITEM LINE)");
+            return;
         }
 
         // Now we decrement the inventory count of item indicated by the productID we
@@ -681,50 +683,37 @@ public class InventoryManager extends javax.swing.JFrame {
         jTextArea1.setText("");
         jTextArea1.append("Deleting ProductID: " + productID);
 
-        // set up a connection to the database
-        try {
-            String sourceURL = GetSourceURL();
-            jTextArea1.append(msgString3);
-
-            //create a connection to the databases
-            dbc.connectToServer(sourceURL, "remote", "remote_pass");
-        } catch (Exception e) {
-            errString = "\nProblem connecting to database:: " + e;
-            jTextArea1.append(errString);
-            return;
-        } // end try-catch
-
         //If there is no connection error, then we form the SQL statement
         //to decrement the inventory item count and then execute it.        
         try {
             switch (but_sel) {
                 // if culture boxes inventory selected
                 case 1:
-                    dbc.decrementCount("cultureboxes", "productid", productID);
+                    res = api.decrementShrubs(productID);
                     break;
                 // if processing equipment inventory selected
                 case 2:
-                    dbc.decrementCount("processing", "productid", productID);
+                    res = api.decrementProcessing(productID);
                     break;
                 // if genomics inventory selected
                 case 3:
-                    dbc.decrementCount("genomics", "productid", productID);
+                    res = api.decrementGenomics(productID);
                     break;
                 // if reference materials  inventory selected
                 case 4:
-                    dbc.decrementCount("referencematerials", "productid", productID);
+                    res = api.decrementReferenceMaterials(productID);
                     break;
                 // if seeds inventory selected
                 case 5:
-                    dbc.decrementCount("seeds", "product_code", productID);
+                    res = api.decrementSeeds(productID);
                     break;
                 // if shrubs inventory selected
                 case 6:
-                    dbc.decrementCount("shrubs", "product_code", productID);
+                    res = api.decrementShrubs(productID);
                     break;
                 // if trees inventory selected
                 case 7:
-                    dbc.decrementCount("trees", "product_code", productID);
+                    res = api.decrementTrees(productID);
                     break;
                 default:
                     break;
@@ -732,12 +721,15 @@ public class InventoryManager extends javax.swing.JFrame {
 
             // display result for the user
             // let the user know all went well
-            jTextArea1.append("\n\n" + productID + " inventory decremented...");
-            while (res.next()) {
-                msgString = tableSelected + ">> " + res.getString(1) + " :: " + res.getString(2)
-                        + " :: " + res.getString(3) + " :: " + res.getString(4);
-                jTextArea1.append("\n" + msgString);
-            } // while
+            jTextArea1.append("\n\n" + productID + " inventory decremented...");            
+            // Now we list the inventory for the selected table            
+            for (Product p : res) {
+                msgString = tableSelected + ">>" + p.getProductCode() + "::" + 
+                        p.getDescription() + " :: " + p.getPrice() + "::" + 
+                        p.getQuantity();
+                jTextArea1.append(msgString + "\n");
+            } // for
+
 
             //jTextArea1.append("\n\n Number of items updated: " + executeUpdateVal );
         } catch (Exception e) {
@@ -779,23 +771,6 @@ public class InventoryManager extends javax.swing.JFrame {
         jRadioButton6.setSelected(true);
         jRadioButton7.setSelected(false);
     }//GEN-LAST:event_jRadioButton6ActionPerformed
-
-    private String GetSourceURL() {
-        String dbName = null;
-        String SQLServerIP = null;
-
-        if (jRadioButton1.isSelected() || jRadioButton2.isSelected()
-                || jRadioButton3.isSelected() || jRadioButton4.isSelected()) {
-            dbName = ":3306/leaftech";
-        } else {
-            dbName = ":3306/Inventory";
-        }
-
-        SQLServerIP = jTextField1.getText();
-        String sourceURL = "jdbc:mysql://" + SQLServerIP + dbName;
-
-        return sourceURL;
-    }
 
     int checkradiobuttons() {
         // Check to make sure a radio button is selected   

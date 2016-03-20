@@ -87,4 +87,18 @@ public interface IRmiApi extends Remote {
     public int deleteProcessing(String productID) throws RemoteException;
     
     public int deleteReferenceMaterials(String productID) throws RemoteException;
+    
+    public List<Product> decrementShrubs(String productID) throws RemoteException;
+    
+    public List<Product> decrementTrees(String productID) throws RemoteException;
+    
+    public List<Product> decrementSeeds(String productID) throws RemoteException;
+    
+    public List<Product> decrementCultureBoxes(String productID) throws RemoteException;
+    
+    public List<Product> decrementGenomics(String productID) throws RemoteException;
+    
+    public List<Product> decrementProcessing(String productID) throws RemoteException;
+    
+    public List<Product> decrementReferenceMaterials(String productID) throws RemoteException;
 }

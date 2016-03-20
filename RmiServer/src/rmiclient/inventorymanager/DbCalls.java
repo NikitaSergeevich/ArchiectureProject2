@@ -18,19 +18,7 @@ public class DbCalls {
 
     Connection DBConn = null;
     ResultSet res = null;
-
-    public boolean connectToServer(String sourceURL, String login, String password) {
-        try {
-            //load JDBC driver class for MySQL
-            Class.forName("com.mysql.jdbc.Driver");
-            DBConn = DriverManager.getConnection(sourceURL, "remote", "remote_pass");
-        } catch (Exception ex) {
-            return false;
-        }
-
-        return true;
-    }
-
+    
     public int insert(String tableName, String productID,
             int quantity, String description, float perUnitCost) {
         int executeUpdateVal = 0;
