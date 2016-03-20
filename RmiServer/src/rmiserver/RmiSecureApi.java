@@ -37,11 +37,12 @@ public class RmiSecureApi implements IRmiSecureApi {
 
     {
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             Connection userConnection = DriverManager.getConnection(Constansts.USER_ACTIVITY_URL, Constansts.DATABASE_LOGIN, Constansts.DATABASE_PASSWORD);
             userStatement = userConnection.createStatement();
 
-        } catch (SQLException ex) {
-            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(RmiSecureApi.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
