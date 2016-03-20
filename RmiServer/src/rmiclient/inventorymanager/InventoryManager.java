@@ -499,7 +499,7 @@ public class InventoryManager extends javax.swing.JFrame {
                 // table
                 case 7:
                     tableSelected = "TREES";
-                    api.insertCultureBoxes(productID, quantity, description, perUnitCost, token);
+                    api.insertTrees(productID, quantity, description, perUnitCost, token);
                     break;
                 default:
                     break;
@@ -691,7 +691,7 @@ public class InventoryManager extends javax.swing.JFrame {
         // Now we decrement the inventory count of item indicated by the productID we
         // parsed out above from the indicated table.        
         jTextArea1.setText("");
-        jTextArea1.append("Deleting ProductID: " + productID);
+        jTextArea1.append("Decrementing ProductID: " + productID);
 
         //If there is no connection error, then we form the SQL statement
         //to decrement the inventory item count and then execute it.        
@@ -699,7 +699,7 @@ public class InventoryManager extends javax.swing.JFrame {
             switch (but_sel) {
                 // if culture boxes inventory selected
                 case 1:
-                    res = api.decrementShrubs(productID, token);
+                    res = api.decrementCultureBoxes(productID, token);
                     break;
                 // if processing equipment inventory selected
                 case 2:
@@ -742,7 +742,7 @@ public class InventoryManager extends javax.swing.JFrame {
 
             //jTextArea1.append("\n\n Number of items updated: " + executeUpdateVal );
         } catch (Exception e) {
-            errString = "\nProblem with delete:: " + e;
+            errString = "\nProblem with decrement:: " + e;
             jTextArea1.append(errString);
         } // try
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -813,28 +813,28 @@ public class InventoryManager extends javax.swing.JFrame {
         //Make sure there is a product ID
         if (jTextField2.getText().length() == 0) {
             jTextArea1.append(productid_error_msg);
-            return false;
+            return true;
         } // product ID
 
         //Make sure there is a price
         if (jTextField3.getText().length() == 0) {
             jTextArea1.append(price_error_msg);
-            return false;
+            return true;
         } // price
 
         //Make sure there is a quantity
         if (jTextField4.getText().length() == 0) {
             jTextArea1.append(quantity_error_msg);
-            return false;
+            return true;
         } // quantity
 
         //Make sure there is a product description
         if (jTextField5.getText().length() == 0) {
             jTextArea1.append(description_error_msg);
-            return false;
+            return true;
         } //product description
 
-        return true;
+        return false;
     }
 
     String checkselection() {

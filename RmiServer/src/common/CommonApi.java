@@ -239,7 +239,7 @@ public class CommonApi implements ICommonApi {
             float perUnitCost) {
         try {
             int res = inventoryStatement.executeUpdate("INSERT INTO shrubs (product_code, "
-                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + "description, quantity, price) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
             if (res != -1) {
@@ -256,7 +256,7 @@ public class CommonApi implements ICommonApi {
             float perUnitCost) {
         try {
             int res = inventoryStatement.executeUpdate("INSERT INTO trees (product_code, "
-                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + "description, quantity, price) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
             if (res != -1) {
@@ -273,7 +273,7 @@ public class CommonApi implements ICommonApi {
             float perUnitCost) {
         try {
             int res = inventoryStatement.executeUpdate("INSERT INTO seeds (product_code, "
-                    + "productdescription, productquantity, productprice) VALUES ( '"
+                    + "description, quantity, price) VALUES ( '"
                     + productID + "', " + "'" + description + "', "
                     + quantity + ", " + perUnitCost + ");");
             if (res != -1) {
@@ -439,7 +439,7 @@ public class CommonApi implements ICommonApi {
 
     @Override
     public int deleteReferenceMaterials(String productID) {
-        String query = "DELETE FROM shrubs WHERE productid = '"
+        String query = "DELETE FROM referencematerials WHERE productid = '"
                 + productID + "';";
         try {
             // execute the delete query
@@ -507,12 +507,12 @@ public class CommonApi implements ICommonApi {
 
     @Override
     public List<Product> decrementCultureBoxes(String productID) {
-        String SQLStatement1 = ("UPDATE cultureboxes set quantity=(quantity-1) where productid = '" + productID + "';");
+        String SQLStatement1 = ("UPDATE cultureboxes set productquantity=(productquantity-1) where productid = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from cultureboxes where productid = '" + productID + "';");
         try {
             // execute the delete query
-            inventoryStatement.executeUpdate(SQLStatement1);
-            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
+            leaftechStatement.executeUpdate(SQLStatement1);
+            ResultSet res = leaftechStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -525,12 +525,12 @@ public class CommonApi implements ICommonApi {
 
     @Override
     public List<Product> decrementGenomics(String productID) {
-        String SQLStatement1 = ("UPDATE genomics set quantity=(quantity-1) where productid = '" + productID + "';");
+        String SQLStatement1 = ("UPDATE genomics set productquantity=(productquantity-1) where productid = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from genomics where productid = '" + productID + "';");
         try {
             // execute the delete query
-            inventoryStatement.executeUpdate(SQLStatement1);
-            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
+            leaftechStatement.executeUpdate(SQLStatement1);
+            ResultSet res = leaftechStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -543,12 +543,12 @@ public class CommonApi implements ICommonApi {
 
     @Override
     public List<Product> decrementProcessing(String productID) {
-        String SQLStatement1 = ("UPDATE processing set quantity=(quantity-1) where productid = '" + productID + "';");
+        String SQLStatement1 = ("UPDATE processing set productquantity=(productquantity-1) where productid = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from processing where productid = '" + productID + "';");
         try {
             // execute the delete query
-            inventoryStatement.executeUpdate(SQLStatement1);
-            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
+            leaftechStatement.executeUpdate(SQLStatement1);
+            ResultSet res = leaftechStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
@@ -561,12 +561,12 @@ public class CommonApi implements ICommonApi {
 
     @Override
     public List<Product> decrementReferenceMaterials(String productID) {
-        String SQLStatement1 = ("UPDATE referencematerials set quantity=(quantity-1) where productid = '" + productID + "';");
+        String SQLStatement1 = ("UPDATE referencematerials set productquantity=(productquantity-1) where productid = '" + productID + "';");
         String SQLStatement2 = ("SELECT * from referencematerials where productid = '" + productID + "';");
         try {
             // execute the delete query
-            inventoryStatement.executeUpdate(SQLStatement1);
-            ResultSet res = inventoryStatement.executeQuery(SQLStatement2);
+            leaftechStatement.executeUpdate(SQLStatement1);
+            ResultSet res = leaftechStatement.executeQuery(SQLStatement2);
             if (res != null) {
                 return parseProductResultSet(res);
             }
