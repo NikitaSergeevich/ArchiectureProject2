@@ -22,13 +22,13 @@ import java.util.logging.Logger;
  *
  * @author isakhankov
  */
-public class RmiApi implements IRmiApi {
+public class CommonApi implements ICommonApi {
 
     private Statement orderInfoStatement;
     private Statement inventoryStatement;
     private Statement leaftechStatement;
 
-    public RmiApi() {
+    public CommonApi() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection orderInfoConnection = DriverManager.getConnection(Constansts.ORDERINFO_URL, Constansts.DATABASE_LOGIN, Constansts.DATABASE_PASSWORD);
@@ -41,7 +41,7 @@ public class RmiApi implements IRmiApi {
             leaftechStatement = leaftechConnection.createStatement();
 
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -61,7 +61,7 @@ public class RmiApi implements IRmiApi {
             }
             return order;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -86,7 +86,7 @@ public class RmiApi implements IRmiApi {
             }
             return orders;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -108,7 +108,7 @@ public class RmiApi implements IRmiApi {
             }
             return items;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -120,7 +120,7 @@ public class RmiApi implements IRmiApi {
             int rows = orderInfoStatement.executeUpdate(SQLStatement);
             return rows;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
     }
@@ -138,7 +138,7 @@ public class RmiApi implements IRmiApi {
             }
             return products;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -151,7 +151,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -164,7 +164,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -177,7 +177,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -190,7 +190,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -203,7 +203,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -216,7 +216,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -229,7 +229,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -246,7 +246,7 @@ public class RmiApi implements IRmiApi {
                 return res;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -263,7 +263,7 @@ public class RmiApi implements IRmiApi {
                 return res;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -280,7 +280,7 @@ public class RmiApi implements IRmiApi {
                 return res;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -297,7 +297,7 @@ public class RmiApi implements IRmiApi {
                 return res;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -314,7 +314,7 @@ public class RmiApi implements IRmiApi {
                 return res;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -331,7 +331,7 @@ public class RmiApi implements IRmiApi {
                 return res;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -348,7 +348,7 @@ public class RmiApi implements IRmiApi {
                 return res;
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -362,7 +362,7 @@ public class RmiApi implements IRmiApi {
             int res = inventoryStatement.executeUpdate(query);
             return res;
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return Constansts.INVALID_RESULT;
         }
     }
@@ -376,7 +376,7 @@ public class RmiApi implements IRmiApi {
             int res = inventoryStatement.executeUpdate(query);
             return res;
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return Constansts.INVALID_RESULT;
         }
     }
@@ -390,7 +390,7 @@ public class RmiApi implements IRmiApi {
             int res = inventoryStatement.executeUpdate(query);
             return res;
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return Constansts.INVALID_RESULT;
         }
     }
@@ -404,7 +404,7 @@ public class RmiApi implements IRmiApi {
             int res = leaftechStatement.executeUpdate(query);
             return res;
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return Constansts.INVALID_RESULT;
         }
     }
@@ -418,7 +418,7 @@ public class RmiApi implements IRmiApi {
             int res = leaftechStatement.executeUpdate(query);
             return res;
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return Constansts.INVALID_RESULT;
         }
     }
@@ -432,7 +432,7 @@ public class RmiApi implements IRmiApi {
             int res = leaftechStatement.executeUpdate(query);
             return res;
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return Constansts.INVALID_RESULT;
         }
     }
@@ -446,7 +446,7 @@ public class RmiApi implements IRmiApi {
             int res = leaftechStatement.executeUpdate(query);
             return res;
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return Constansts.INVALID_RESULT;
         }
     }
@@ -463,7 +463,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return null;
@@ -481,7 +481,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return null;
@@ -499,7 +499,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return null;
@@ -517,7 +517,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return null;
@@ -535,7 +535,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return null;
@@ -553,7 +553,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return null;
@@ -571,7 +571,7 @@ public class RmiApi implements IRmiApi {
                 return parseProductResultSet(res);
             }
         } catch (Exception ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
         return null;
@@ -588,7 +588,7 @@ public class RmiApi implements IRmiApi {
 
             return result;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -601,7 +601,7 @@ public class RmiApi implements IRmiApi {
 
             return result;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -619,7 +619,7 @@ public class RmiApi implements IRmiApi {
 
             return result;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }
@@ -635,7 +635,7 @@ public class RmiApi implements IRmiApi {
 
             return result;
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return Constansts.INVALID_RESULT;
     }

@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author isakhankov
  */
-public interface IRmiApi {
+public interface ICommonApi {
 
     Order getOrder(int id);
 

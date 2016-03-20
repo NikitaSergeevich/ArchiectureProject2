@@ -6,10 +6,10 @@
 package rmiclient;
 
 import common.Constansts;
-import common.IRmiApi;
 import common.IRmiSecureApi;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import common.ICommonApi;
 
 /**
  *

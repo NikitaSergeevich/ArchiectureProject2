@@ -6,8 +6,7 @@
 package rmiserver;
 
 import common.Constansts;
-import common.IRmiApi;
-import common.RmiApi;
+import common.CommonApi;
 import common.IRmiSecureApi;
 import common.pojo.Order;
 import common.pojo.OrderItem;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import common.ICommonApi;
 
 /**
  *
@@ -31,7 +31,7 @@ public class RmiSecureApi implements IRmiSecureApi {
 
     private Statement userStatement;
 
-    private final IRmiApi api = new RmiApi();
+    private final ICommonApi api = new CommonApi();
     private static final Random random = new Random();
     private final UserActivityLogger logger = new UserActivityLogger();
 
@@ -41,7 +41,7 @@ public class RmiSecureApi implements IRmiSecureApi {
             userStatement = userConnection.createStatement();
 
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -65,7 +65,7 @@ public class RmiSecureApi implements IRmiSecureApi {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -90,7 +90,7 @@ public class RmiSecureApi implements IRmiSecureApi {
                     + "'";
             userStatement.executeUpdate(query);
         } catch (SQLException ex) {
-            Logger.getLogger(RmiApi.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommonApi.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

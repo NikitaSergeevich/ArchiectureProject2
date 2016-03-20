@@ -1,6 +1,5 @@
 package rmiclient.inventorymanager;
 
-import common.IRmiApi;
 import common.IRmiSecureApi;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -10,6 +9,7 @@ import java.util.logging.Logger;
 import rmiclient.ordermanager.OrderManager;
 import common.pojo.Product;
 import java.util.List;
+import common.ICommonApi;
 
 /**
  * ****************************************************************************
