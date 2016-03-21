@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author isakhankov
  */
-public class OrderItem implements Serializable{
+public class OrderItem implements Serializable {
 
     private String id;
     private String productId;

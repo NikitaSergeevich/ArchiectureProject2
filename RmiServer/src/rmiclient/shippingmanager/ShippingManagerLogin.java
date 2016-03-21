@@ -8,7 +8,6 @@ package rmiclient.shippingmanager;
 import common.Constansts;
 import common.IRmiSecureApi;
 import rmiclient.LoginForm;
-import common.ICommonApi;
 
 /**
  *

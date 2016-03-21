@@ -67,32 +67,32 @@ public interface ICommonApi {
 
     public int insertReferenceMaterials(String productID, int quantity,
             String description, float perUnitCost);
-    
+
     public int deleteShrubs(String productID);
-    
+
     public int deleteTrees(String productID);
-    
+
     public int deleteSeeds(String productID);
-    
+
     public int deleteCultureBoxes(String productID);
-    
+
     public int deleteGenomics(String productID);
-    
+
     public int deleteProcessing(String productID);
-    
+
     public int deleteReferenceMaterials(String productID);
-    
+
     public List<Product> decrementShrubs(String productID);
-    
+
     public List<Product> decrementTrees(String productID);
-    
+
     public List<Product> decrementSeeds(String productID);
-    
+
     public List<Product> decrementCultureBoxes(String productID);
-    
+
     public List<Product> decrementGenomics(String productID);
-    
+
     public List<Product> decrementProcessing(String productID);
-    
+
     public List<Product> decrementReferenceMaterials(String productID);
 }
